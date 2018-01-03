@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>[Aprendendo Spring MVC] Injeção de Dependência</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is my site.">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="canonical" href="http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-injecao-de-dependencia/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/assets/js/hover.zoom.js" ></script>
+    <script src="/assets/js/hover.zoom.conf.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+
+    <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Isaque Bressy</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!-- <li><a href="/work/">Work</a></li> -->
+            <!-- <li><a href="/about/">About</a></li> -->
+            <li><a href="/blog/">Blog</a></li>
+            <!-- <li><a href="/contact/">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+    	<!-- +++++ Post +++++ -->
+	<div id="white">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p><img src="/assets/img/user.png" width="50px" height="50px"> <ba>isaquebressy</ba></p>
+					<p><bd>January 8, 2016</bd></p>
+					<h4>[Aprendendo Spring MVC] Injeção de Dependência</h4>
+					<p></p>
+					<p><p>O Spring foi criado para ser um conteiner de injeção de dependências. Assim, ao invés de uma classe instanciar um objeto de outra classe dentro dela, esse objeto é injetado na classe através do construtor, diminuindo o acoplamento entre as classes.</p>
+
+<!--more-->
+
+<p>A injeção de dependências do <strong>Spring</strong> é feita utilizando a anotação <code class="highlighter-rouge">@Autowired</code> no construtor que receberá a dependência. O <strong>Spring</strong> precisa conhecer o objeto a ser injetado, por isso a classe a ser injetada precisa estar anotada com <code class="highlighter-rouge">@Comoponent</code>. No caso específico do <em>DAO</em>, existe a anotação <code class="highlighter-rouge">@Repository</code> que funciona de maneira igual.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Controller</span>
+<span class="kd">class</span> <span class="nc">HelloController</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="n">UserDao</span> <span class="n">dao</span><span class="o">;</span>
+  <span class="nd">@Autowiried</span>
+  <span class="kd">public</span> <span class="nf">HelloConntroller</span><span class="o">(</span><span class="n">UserDao</span> <span class="n">dao</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">dao</span> <span class="o">=</span> <span class="n">dao</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@Repository</span>
+<span class="kd">class</span> <span class="nc">UserDao</span> <span class="o">{</span>
+  <span class="c1">// propriedades e métodos…</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+</p>
+					<br>
+					<p><bt>Category:  <a href="#">java</a>  <a href="#">learning</a>  <a href="#">spring-mvc</a>  <a href="#"></a> </bt></p>
+					<p><bt>Tags:  <a href="#">framework</a>  <a href="#">java</a>  <a href="#">mvc</a> </bt></p>					
+					<hr>
+					<p><a href="/blog/"># Back</a></p>
+				</div>
+
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /white -->
+
+    <div id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4">
+				<h4>Contato</h4>
+				<p>isaque@bressy.com.br</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>Links</h4>
+				<p>
+					<a href="http://facebook.com/isaque.bressy">Facebook</a><br/>
+					<a href="https://plus.google.com/+IsaqueBressy">Google+</a><br/>
+					<a href="https://twitter.com/isaquebressy">Twitter</a>
+				</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>About Stanley</h4>
+				<p>This cute theme was created to showcase your work in a simple way. Use it wisely.</p>
+			</div><!-- /col-lg-4 -->
+		
+		</div>
+	
+	</div>
+</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

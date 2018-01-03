@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>[Aprendendo Java EE] Cookies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is my site.">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="canonical" href="http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-cookies/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/assets/js/hover.zoom.js" ></script>
+    <script src="/assets/js/hover.zoom.conf.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+
+    <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Isaque Bressy</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!-- <li><a href="/work/">Work</a></li> -->
+            <!-- <li><a href="/about/">About</a></li> -->
+            <li><a href="/blog/">Blog</a></li>
+            <!-- <li><a href="/contact/">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+    	<!-- +++++ Post +++++ -->
+	<div id="white">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p><img src="/assets/img/user.png" width="50px" height="50px"> <ba>isaquebressy</ba></p>
+					<p><bd>November 4, 2015</bd></p>
+					<h4>[Aprendendo Java EE] Cookies</h4>
+					<p></p>
+					<p><p>É possível manter algumas informações do usuário através de cookies. Um cookie é uma estrutura de chave e valor que é enviada do servidor para o cliente e que este armazena por um tempo previamente determinado. Esse par de <code class="highlighter-rouge">String</code>s é criado no servidor através da classe <code class="highlighter-rouge">Cookie</code> (<code class="highlighter-rouge">javax.servlet.http</code>) e enviado através do response <code class="highlighter-rouge">HttpServletResponse</code> (<code class="highlighter-rouge">javax.servlet.http</code>).</p>
+
+<!--more-->
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Cookie</span> <span class="n">cookie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Cookie</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span> <span class="s">"value"</span><span class="o">);</span>
+<span class="n">resp</span><span class="o">.</span><span class="na">addCookie</span><span class="o">(</span><span class="n">cookie</span><span class="o">);</span>
+</code></pre>
+</div>
+
+<p>Após o cookie estar armazenado no cliente, a cada chamada ao servidor, o cookie é enviado na requisição. No servidor, os cookies podem ser pegos através do método da requisição <code class="highlighter-rouge">getCookies</code>.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">Cookie</span><span class="o">[]</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="na">getCookies</span><span class="o">();</span>
+</code></pre>
+</div>
+
+<p>Este método retornará todos os cookies enviados para o servidor e pode-se iterar nesse array para encontrar a chave que se está procurando.</p>
+
+<p>Porém, há uma particularidade na utilização de cookies. Como os cookies são armazenados no lado do cliente, o usuário pode manipular as informações contidas nesses cookies e então reenviar ao servidor. Assim, o servidor pode receber essas alterações e processá-las indevidamente. Sendo assim, é desencorajada a utilização de cookies para envio de informações que serão usadas sem algum tipo de validação das mesmas.</p>
+
+<p>Quando o cookie é enviado para o  cliente, ele vai com uma informação referente ao tempo que aquele cookie viverá. Caso se deseje setar ou alterar essa informação deve-se utilizar o método <code class="highlighter-rouge">maxAge</code> contido no cookie, sendo o parâmetro passado um valor em segundos.</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">cookie</span><span class="o">.</span><span class="na">setMaxAge</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span> <span class="c1">// O tempo de vida desse cookie é de 10 segundos.</span>
+</code></pre>
+</div>
+
+<p>Caso deseje-se remover o cookie, alteramos o valor para <code class="highlighter-rouge">0</code>:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="n">cookie</span><span class="o">.</span><span class="na">setMaxAge</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">// Remove o cookie da requisição.</span>
+<span class="n">resp</span><span class="o">.</span><span class="na">addCookie</span><span class="o">(</span><span class="n">cookie</span><span class="o">);</span> <span class="c1">// Envia o cookie de volta para o cliente através do response.</span>
+</code></pre>
+</div>
+</p>
+					<br>
+					<p><bt>Category:  <a href="#">java</a>  <a href="#">learning</a>  <a href="#"></a> </bt></p>
+					<p><bt>Tags:  <a href="#">java</a>  <a href="#">language</a>  <a href="#">programming</a> </bt></p>					
+					<hr>
+					<p><a href="/blog/"># Back</a></p>
+				</div>
+
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /white -->
+
+    <div id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4">
+				<h4>Contato</h4>
+				<p>isaque@bressy.com.br</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>Links</h4>
+				<p>
+					<a href="http://facebook.com/isaque.bressy">Facebook</a><br/>
+					<a href="https://plus.google.com/+IsaqueBressy">Google+</a><br/>
+					<a href="https://twitter.com/isaquebressy">Twitter</a>
+				</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>About Stanley</h4>
+				<p>This cute theme was created to showcase your work in a simple way. Use it wisely.</p>
+			</div><!-- /col-lg-4 -->
+		
+		</div>
+	
+	</div>
+</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

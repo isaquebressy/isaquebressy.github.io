@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>[Learning Spring MVC] Session</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is my site.">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="canonical" href="http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/learning-spring-mvc-session/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/assets/js/hover.zoom.js" ></script>
+    <script src="/assets/js/hover.zoom.conf.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+
+    <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Isaque Bressy</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!-- <li><a href="/work/">Work</a></li> -->
+            <!-- <li><a href="/about/">About</a></li> -->
+            <li><a href="/blog/">Blog</a></li>
+            <!-- <li><a href="/contact/">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+    	<!-- +++++ Post +++++ -->
+	<div id="white">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p><img src="/assets/img/user.png" width="50px" height="50px"> <ba>isaquebressy</ba></p>
+					<p><bd>January 8, 2016</bd></p>
+					<h4>[Learning Spring MVC] Session</h4>
+					<p></p>
+					<p><p>Para receber uma <em>sessão</em> numa <em>action</em>, basta receber como parâmetro um objeto <code class="highlighter-rouge">HttpSession</code>. Daí podemos setar um atributo na sessão.</p>
+
+<!--more-->
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/login"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">login</span><span class="o">(</span><span class="n">User</span> <span class="n">myUser</span><span class="o">,</span> <span class="n">HttpSession</span> <span class="n">session</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="k">new</span> <span class="n">UserDao</span><span class="o">().</span><span class="na">exists</span><span class="o">(</span><span class="n">myUser</span><span class="o">))</span> <span class="o">{</span>
+      <span class="n">session</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="s">"usuarioLogado"</span><span class="o">,</span> <span class="n">usuario</span><span class="o">);</span>
+      <span class="k">return</span> <span class="s">"home"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="s">"redirect:form"</span><span class="o">;</span>
+  <span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Para invalidar uma sessão, basta chamar o</p>
+<pre><code class="language-`java">session.invalidate();
+</code></pre>
+
+<p>Assim a sessão daquele usuário não estará mais válida.</p>
+</p>
+					<br>
+					<p><bt>Category:  <a href="#">java</a>  <a href="#">learning</a>  <a href="#">spring-mvc</a>  <a href="#"></a> </bt></p>
+					<p><bt>Tags:  <a href="#">framework</a>  <a href="#">java</a>  <a href="#">mvc</a> </bt></p>					
+					<hr>
+					<p><a href="/blog/"># Back</a></p>
+				</div>
+
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /white -->
+
+    <div id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4">
+				<h4>Contato</h4>
+				<p>isaque@bressy.com.br</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>Links</h4>
+				<p>
+					<a href="http://facebook.com/isaque.bressy">Facebook</a><br/>
+					<a href="https://plus.google.com/+IsaqueBressy">Google+</a><br/>
+					<a href="https://twitter.com/isaquebressy">Twitter</a>
+				</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>About Stanley</h4>
+				<p>This cute theme was created to showcase your work in a simple way. Use it wisely.</p>
+			</div><!-- /col-lg-4 -->
+		
+		</div>
+	
+	</div>
+</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

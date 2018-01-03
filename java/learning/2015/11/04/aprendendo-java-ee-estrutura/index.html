@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>[Aprendendo Java EE] Estrutura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is my site.">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="canonical" href="http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-estrutura/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/assets/js/hover.zoom.js" ></script>
+    <script src="/assets/js/hover.zoom.conf.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+
+
+    <body>
+
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Isaque Bressy</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!-- <li><a href="/work/">Work</a></li> -->
+            <!-- <li><a href="/about/">About</a></li> -->
+            <li><a href="/blog/">Blog</a></li>
+            <!-- <li><a href="/contact/">Contact</a></li> -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+    	<!-- +++++ Post +++++ -->
+	<div id="white">
+	    <div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2">
+					<p><img src="/assets/img/user.png" width="50px" height="50px"> <ba>isaquebressy</ba></p>
+					<p><bd>November 4, 2015</bd></p>
+					<h4>[Aprendendo Java EE] Estrutura</h4>
+					<p></p>
+					<p><p>Um projeto Java Web geralmente é gerado com a seguinte estrutura:</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>* build/
+    - classes/
+* src/
+* WebContent/
+    - META-INF
+        + MANIFEST.MF
+    - WEB-INF
+        + lib/
+        + web.xml
+    - index.html
+</code></pre>
+</div>
+
+<!--more-->
+
+<p>Onde <code class="highlighter-rouge">WebContent</code> é geralmente o diretório padrão onde o conteúdo do site é acessado através da internet. Todos os arquivos e diretórios dentro deste são visíveis exceto os diretórios <code class="highlighter-rouge">WEB-INF</code> e <code class="highlighter-rouge">META-INF</code> e seus respectivos conteúdos.</p>
+
+<p>As classes compiladas do java vão para uma pasta que é criada automaticamente <code class="highlighter-rouge">WEB-INF/classes/</code>. A pasta <code class="highlighter-rouge">WEB-INF/lib/</code> é onde as bibliotecas que são utilizadas na aplicação ficam.</p>
+
+<p>A pasta <code class="highlighter-rouge">src/</code> é a pasta onde ficarão os códigos fontes da nossa aplicação. Geralmente esta é dividida em subpastas que representam os pacotes da aplicação.</p>
+
+<p>O arquivo <code class="highlighter-rouge">web.xml</code> contém a configuração da aplicação web. Inicialmente, ele é preenchido com o <code class="highlighter-rouge">display-name</code> e uma lista <code class="highlighter-rouge">welcome-files</code>. Estes <code class="highlighter-rouge">welcome-files</code> indicam os arquivos que devem ser procurados na pasta de conteúdo quando o usuário acessar um diretório <code class="highlighter-rouge">/</code>. Geralmente o <code class="highlighter-rouge">web.xml</code> configura por padrão os arquivos <code class="highlighter-rouge">index.html</code> e <code class="highlighter-rouge">index.jsp</code> como <code class="highlighter-rouge">welcome-files</code>.</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;web-app</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="na">xmlns=</span><span class="s">"http://java.sun.com/xml/ns/javaee"</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">"http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"</span>
+    <span class="na">id=</span><span class="s">"WebApp_ID"</span> <span class="na">version=</span><span class="s">"3.0"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;display-name&gt;</span>gerenciador<span class="nt">&lt;/display-name&gt;</span>
+
+    <span class="nt">&lt;welcome-file-list&gt;</span>
+        <span class="nt">&lt;welcome-file&gt;</span>index.html<span class="nt">&lt;/welcome-file&gt;</span>
+        <span class="nt">&lt;welcome-file&gt;</span>index.jsp<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;/welcome-file-list&gt;</span>
+<span class="nt">&lt;/web-app&gt;</span>
+</code></pre>
+</div>
+</p>
+					<br>
+					<p><bt>Category:  <a href="#">java</a>  <a href="#">learning</a>  <a href="#"></a> </bt></p>
+					<p><bt>Tags:  <a href="#">java</a>  <a href="#">language</a>  <a href="#">programming</a> </bt></p>					
+					<hr>
+					<p><a href="/blog/"># Back</a></p>
+				</div>
+
+			</div><!-- /row -->
+	    </div> <!-- /container -->
+	</div><!-- /white -->
+
+    <div id="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4">
+				<h4>Contato</h4>
+				<p>isaque@bressy.com.br</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>Links</h4>
+				<p>
+					<a href="http://facebook.com/isaque.bressy">Facebook</a><br/>
+					<a href="https://plus.google.com/+IsaqueBressy">Google+</a><br/>
+					<a href="https://twitter.com/isaquebressy">Twitter</a>
+				</p>
+			</div><!-- /col-lg-4 -->
+			
+			<div class="col-lg-4">
+				<h4>About Stanley</h4>
+				<p>This cute theme was created to showcase your work in a simple way. Use it wisely.</p>
+			</div><!-- /col-lg-4 -->
+		
+		</div>
+	
+	</div>
+</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+
+    </body>
+</html>

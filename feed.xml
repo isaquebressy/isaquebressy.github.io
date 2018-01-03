@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Isaque Bressy</title>
+    <description>This is my site.</description>
+    <link>http://0.0.0.0:4000/</link>
+    <atom:link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>[Aprendendo Spring MVC] Injeção de Dependência</title>
+        <description>&lt;p&gt;O Spring foi criado para ser um conteiner de injeção de dependências. Assim, ao invés de uma classe instanciar um objeto de outra classe dentro dela, esse objeto é injetado na classe através do construtor, diminuindo o acoplamento entre as classes.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;A injeção de dependências do &lt;strong&gt;Spring&lt;/strong&gt; é feita utilizando a anotação &lt;code class=&quot;highlighter-rouge&quot;&gt;@Autowired&lt;/code&gt; no construtor que receberá a dependência. O &lt;strong&gt;Spring&lt;/strong&gt; precisa conhecer o objeto a ser injetado, por isso a classe a ser injetada precisa estar anotada com &lt;code class=&quot;highlighter-rouge&quot;&gt;@Comoponent&lt;/code&gt;. No caso específico do &lt;em&gt;DAO&lt;/em&gt;, existe a anotação &lt;code class=&quot;highlighter-rouge&quot;&gt;@Repository&lt;/code&gt; que funciona de maneira igual.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserDao&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@Autowiried&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;HelloConntroller&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UserDao&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;dao&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Repository&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserDao&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// propriedades e métodos…&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 16:44:22 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-injecao-de-dependencia/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-injecao-de-dependencia/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Spring MVC] Interceptors</title>
+        <description>&lt;p&gt;Os &lt;em&gt;interceptors&lt;/em&gt; são os filtros do &lt;strong&gt;Spring&lt;/strong&gt;. Eles são executados sempre que há uma requisição. Assim, é possível interceptar uma chamada antes de processa-la e fazer algumas verificações, permitindo ou bloqueando o fluxo da requisição.&lt;br /&gt;
+&lt;!--more--&gt;
+Para criar um interceptor, deve-se estender &lt;code class=&quot;highlighter-rouge&quot;&gt;HandlerInterceptorAdapter&lt;/code&gt; e sobrescrever um dos seus métodos.&lt;br /&gt;
+Geralmente o &lt;code class=&quot;highlighter-rouge&quot;&gt;preHandle&lt;/code&gt; é o método mais utilizado, pois ele é executado antes da requisição ser processada. Para continuar com o processamento da requisição deve-se retornar &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;. Caso contrário, &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; bloqueará o fluxo da requisição.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;LoginInterceptor&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HandlerInterceptorAdapter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;preHandle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpServletRequest&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Mas somente criar o interceptor não fará a requisição ser interceptada. Para que o &lt;strong&gt;Spring&lt;/strong&gt; conheça os &lt;em&gt;interceptors&lt;/em&gt; criados, é necessário registrar os mesmos no &lt;code class=&quot;highlighter-rouge&quot;&gt;spring-context.xml&lt;/code&gt; através da tag &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;mvc:interceptors&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;mvc:interceptors&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;endereco.da.classe.interceptor.no.pacote&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/mvc:interceptors&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Após este registro, o &lt;strong&gt;Spring&lt;/strong&gt; está apto a interceptar as requisições.&lt;br /&gt;
+É interessante que, dentro do &lt;em&gt;interceptor&lt;/em&gt;, seja verificada a &lt;em&gt;URL&lt;/em&gt; da requisição para tratar quais endereços serão interceptados e quais regras serão aplicadas.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 16:28:16 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-interceptors/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-interceptors/</guid>
+      </item>
+    
+      <item>
+        <title>[Learning Spring MVC] Session</title>
+        <description>&lt;p&gt;Para receber uma &lt;em&gt;sessão&lt;/em&gt; numa &lt;em&gt;action&lt;/em&gt;, basta receber como parâmetro um objeto &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpSession&lt;/code&gt;. Daí podemos setar um atributo na sessão.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/login&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myUser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpSession&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UserDao&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myUser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;usuarioLogado&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;usuario&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;home&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;redirect:form&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para invalidar uma sessão, basta chamar o&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-`java&quot;&gt;session.invalidate();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Assim a sessão daquele usuário não estará mais válida.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 13:45:34 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/learning-spring-mvc-session/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/learning-spring-mvc-session/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Spring MVC] ModelAndView</title>
+        <description>&lt;p&gt;Para enviar os dados para a &lt;em&gt;JSP&lt;/em&gt; é um pouco diferente. Ao invés de retornar uma &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; com o nome da &lt;em&gt;JSP&lt;/em&gt;, retornamos um objeto do tipo &lt;code class=&quot;highlighter-rouge&quot;&gt;ModelAndView&lt;/code&gt; que conterá a &lt;em&gt;view&lt;/em&gt; e objetos contendo os dados que poderão ser adicionados.&lt;br /&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ModelAndView&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sayHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;ModelAndView&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modelAndView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ModelAndView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;mv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;modelAndView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;No &lt;em&gt;JSP&lt;/em&gt;, podemos acessar os dados através de &lt;em&gt;EL&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsp&quot;&gt;&amp;lt;html&amp;gt;
+  &amp;lt;body&amp;gt;
+    Hello, ${user.name}
+  &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Podemos também, ao invés de retornar um &lt;code class=&quot;highlighter-rouge&quot;&gt;ModelAndView&lt;/code&gt;, continuar retornando uma &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; com o nome da &lt;em&gt;view&lt;/em&gt; e receber como parâmetro um objeto do tipo &lt;code class=&quot;highlighter-rouge&quot;&gt;Model&lt;/code&gt; na assinatura do método. Daí é só adicionar um atributo a este &lt;code class=&quot;highlighter-rouge&quot;&gt;Model&lt;/code&gt; que o mesmo passará a ser acessível na &lt;em&gt;JSP&lt;/em&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sayHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Model&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;user/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Das duas maneiras, o resultado é o mesmo. Como é indiferente, é bom escolher uma delas e seguir o padrão.&lt;/p&gt;
+
+&lt;h3 id=&quot;ajax&quot;&gt;AJAX&lt;/h3&gt;
+&lt;p&gt;Existe também a opção de Uma &lt;em&gt;action&lt;/em&gt; não redirecionar para uma &lt;em&gt;JSP&lt;/em&gt;, fazendo apenas o que foi requisitado e retornando um resultado ou um status de sucesso (&lt;em&gt;http status&lt;/em&gt; 200). Para tal, a &lt;em&gt;action&lt;/em&gt; deve retornar &lt;code class=&quot;highlighter-rouge&quot;&gt;void&lt;/code&gt; e receber um &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpServletResponse&lt;/code&gt;, onde seu &lt;em&gt;status&lt;/em&gt; deve ser setado para 200.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/rmUser&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;paga&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpServletResponse&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//… deleting user…&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setStatus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;uso-do-jquery-e-outras-libs&quot;&gt;Uso do jQuery (e outras libs)&lt;/h4&gt;
+&lt;p&gt;Para a utilização de recursos dentro do projeto (como a importação do &lt;em&gt;jQuery&lt;/em&gt;), deve-se informar ao &lt;strong&gt;Spring&lt;/strong&gt; para não responder à essas chamadas. Para tal, deve-se acrescentar ao &lt;code class=&quot;highlighter-rouge&quot;&gt;spring-context.xml&lt;/code&gt; a seguinte configuração:&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;mvc:default-servlet-handler/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Assim, o &lt;strong&gt;Spring&lt;/strong&gt; não vai capturar a requisição para tentar achar uma action que responda pelo endereço chamado.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 13:40:27 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-modelandview/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-modelandview/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Spring MVC] Controllers</title>
+        <description>&lt;p&gt;O &lt;em&gt;controller&lt;/em&gt; no &lt;strong&gt;Spring MVC&lt;/strong&gt; deve ser anotado com &lt;code class=&quot;highlighter-rouge&quot;&gt;@Controller&lt;/code&gt; e as &lt;em&gt;actions&lt;/em&gt; (métodos dos &lt;em&gt;controllers&lt;/em&gt; que são mapeados para o &lt;em&gt;front-controller&lt;/em&gt; redirecionar) devem ser anotadas com &lt;code class=&quot;highlighter-rouge&quot;&gt;@RequestMapping&lt;/code&gt;, passando o caminho a qual ela responderá.&lt;br /&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Após processar as regras de negócio, a &lt;em&gt;action&lt;/em&gt; deve retornar uma &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; com o nome da &lt;em&gt;view&lt;/em&gt; (página que será retornada para apresentação no cliente) sem a extensão.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello World.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A &lt;em&gt;view&lt;/em&gt; que será chamada deve estar no caminho declarado no arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;/WEB-INF/spring-context.xml&lt;/code&gt;. Geralmente, as &lt;em&gt;views&lt;/em&gt; ficam na pasta &lt;code class=&quot;highlighter-rouge&quot;&gt;/WEB-INF/views&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ao invés de retornar uma &lt;em&gt;JSP&lt;/em&gt;, o &lt;em&gt;controller&lt;/em&gt; pode também redirecionar para outra &lt;em&gt;action&lt;/em&gt;, sendo possível fazer esse redirecionamento no cliente ou no servidor. Para fazê-lo no cliente, deve-se passar o termo &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;redirect:&quot;&lt;/code&gt; na &lt;em&gt;string&lt;/em&gt; de retorno da &lt;em&gt;action&lt;/em&gt; e, logo depois, o nome que foi mapeado para a mesma.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello World.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;redirect:hello2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;anotherHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//Code…&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Caso haja a necessidade de ser feito um redirecionamento no servidor (&lt;em&gt;forward&lt;/em&gt;), é possível utilizar o termo &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;forward:&quot;&lt;/code&gt; dentro da &lt;em&gt;string&lt;/em&gt; de retorno, passando uma &lt;em&gt;action&lt;/em&gt; (caminho mapeado como &lt;code class=&quot;highlighter-rouge&quot;&gt;@RequestMapping&lt;/code&gt;) do &lt;em&gt;controller&lt;/em&gt;, ao invés do nome da &lt;em&gt;JSP&lt;/em&gt;. Assim, a &lt;em&gt;URL&lt;/em&gt; mostrada no browser continuará a mesma.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello World.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;forward:hello2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;anotherHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//Code…&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Através de um formulário, é possível passar os dados para o &lt;em&gt;controller&lt;/em&gt; apenas nomeando os campos com os valores de um objeto e recebendo como parâmetro da &lt;em&gt;action&lt;/em&gt; o objeto. O &lt;strong&gt;Spring&lt;/strong&gt; trata de verificar quais os campos equivalem e já os popular.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Controller&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sayHello&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello, &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getNome&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 11:19:28 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-controllers/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-controllers/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Spring MVC] Configuração</title>
+        <description>&lt;p&gt;O &lt;strong&gt;Spring MVC&lt;/strong&gt; é um framework que utiliza o padrão MVC para auxiliar no desenvolvimento de aplicações.&lt;/p&gt;
+
+&lt;p&gt;Após importar a biblioteca do Spring MVC, devemos declarar no arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;web.xml&lt;/code&gt; a &lt;em&gt;servlet&lt;/em&gt; que será o &lt;em&gt;front-controller&lt;/em&gt; da aplicação. O &lt;em&gt;front-controller&lt;/em&gt; é quem vai receber a requisição e encaminhar para o controlador responsável. O &lt;strong&gt;Spring&lt;/strong&gt; nos fornece essa &lt;em&gt;servlet&lt;/em&gt;, chamada &lt;code class=&quot;highlighter-rouge&quot;&gt;DispatcherServlet&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;org.springframework.web.servlet.DispatcherServlet&lt;/code&gt;).&lt;br /&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;Junto com a declaração da servlet principal do spring, devemos passar como parâmetro o local onde estará a configuração do mesmo. Este parâmetro é o contextConfigLocation e é declarado num &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;init-param&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Após a declaração da &lt;em&gt;servlet&lt;/em&gt;, mapeamos para que ela responda através do padrão de url “/”&lt;/p&gt;
+
+&lt;p&gt;Segue abaixo a configuração do &lt;code class=&quot;highlighter-rouge&quot;&gt;web.xml&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;servlet&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;servlet-name&amp;gt;&lt;/span&gt;Spring MVC Dispatcher Servlet&lt;span class=&quot;nt&quot;&gt;&amp;lt;/servlet-name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;servlet-class&amp;gt;&lt;/span&gt;
+    org.springframework.web.servlet.DispatcherServlet
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/servlet-class&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;init-param&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-name&amp;gt;&lt;/span&gt;contextConfigLocation&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-name&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-value&amp;gt;&lt;/span&gt;
+      /WEB-INF/spring-context.xml
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-value&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/init-param&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;load-on-startup&amp;gt;&lt;/span&gt;1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/load-on-startup&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/servlet&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;servlet-mapping&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;servlet-name&amp;gt;&lt;/span&gt;Spring MVC Dispatcher Servlet&lt;span class=&quot;nt&quot;&gt;&amp;lt;/servlet-name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;url-pattern&amp;gt;&lt;/span&gt;/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/url-pattern&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/servlet-mapping&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Após declarar e mapear nossa &lt;em&gt;servlet&lt;/em&gt; principal, devemos configurá-la, através do arquivo declarado no &lt;code class=&quot;highlighter-rouge&quot;&gt;web.xml&lt;/code&gt; como &lt;code class=&quot;highlighter-rouge&quot;&gt;contextConfigLocation&lt;/code&gt;. No &lt;code class=&quot;highlighter-rouge&quot;&gt;/WEB-INF/spring-context.xml&lt;/code&gt;, informaremos ao &lt;strong&gt;Spring&lt;/strong&gt; onde estão as classes para que ele possa escanear e encontrar os controllers da aplicação. Informaremos também o local onde as views estarão. E caso queiramos utilizar anotações, este também é o lugar para informarmos isto.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;beans&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/beans&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;xmlns:xsi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;xmlns:context=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/context&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;xmlns:mvc=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/mvc&quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;xsi:schemaLocation=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/mvc&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;http://www.springframework.org/schema/beans&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;http://www.springframework.org/schema/beans/spring-beans-3.0.xsd&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;http://www.springframework.org/schema/context&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;http://www.springframework.org/schema/context/spring-context-3.0.xsd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;context:component-scan&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;base-package=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;br.com.caelum.contas&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;mvc:annotation-driven&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;prefix&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/WEB-INF/views/&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;suffix&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.jsp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/beans&amp;gt;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Podemos configurar o Spring sem a utilização de xml. Para isso, é preciso criar uma classe que herda AbstractAnnotationConfigDispatcherServletInitializer e implementar seus métodos getServletMappings() e getServletConfigClasses().&lt;/p&gt;
+</description>
+        <pubDate>Fri, 08 Jan 2016 11:17:31 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-configuracao/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/spring-mvc/2016/01/08/aprendendo-spring-mvc-configuracao/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Java EE] JSPs</title>
+        <description>&lt;p&gt;As &lt;strong&gt;JSP&lt;/strong&gt;s são as páginas dinâmicas do &lt;strong&gt;Java&lt;/strong&gt; e servem para separar a camada de visualização da lógica de negócios. Assim, as servlets recebem as requisições, executam as regras e redirecionam para as &lt;strong&gt;JSP&lt;/strong&gt;s que retornam uma página para o cliente. Com isso, todo aquele trabalho em escrever com o &lt;code class=&quot;highlighter-rouge&quot;&gt;PrintWriter&lt;/code&gt; é facilitado.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;A dinâmica das &lt;strong&gt;JSP&lt;/strong&gt;s está em usar &lt;em&gt;scriptlets&lt;/em&gt;, &lt;em&gt;expression language&lt;/em&gt; e &lt;em&gt;taglibs&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Scriptlet&lt;/strong&gt;: é um código java escrito entre &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;%&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;%&amp;gt;&lt;/code&gt; dentro das &lt;strong&gt;JSP&lt;/strong&gt;s. Seu uso é desencorajado pois a camada de visualização deveria se restringir a linguagens de marcação.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Expression Language (EL)&lt;/strong&gt;: é uma linguagem que foi criada para evitar a utilização dos &lt;em&gt;scriptlets&lt;/em&gt;. É geralmente utilizado entre &lt;code class=&quot;highlighter-rouge&quot;&gt;${&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;}&lt;/code&gt; e avaliam os valores contidos em parâmetros e operações lógicas e matemáticas.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Taglibs&lt;/strong&gt;: são códigos no formato de marcação que são usadas juntamente com as ELs para dar interação (condicionais, loops, instancia de objetos, …) à pagina. A taglib mais comumente usada é a &lt;code class=&quot;highlighter-rouge&quot;&gt;core&lt;/code&gt; da &lt;strong&gt;JSTL&lt;/strong&gt; (&lt;em&gt;&lt;strong&gt;J&lt;/strong&gt;avaServer Pages &lt;strong&gt;S&lt;/strong&gt;tandard &lt;strong&gt;T&lt;/strong&gt;ag &lt;strong&gt;L&lt;/strong&gt;ibrary&lt;/em&gt;).&lt;/p&gt;
+
+&lt;h2 id=&quot;jstl&quot;&gt;JSTL&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;JSTL&lt;/strong&gt; pode ser instalada através do site &lt;a href=&quot;&quot;&gt;http://jstl.java.net/&lt;/a&gt;.&lt;br /&gt;
+Após inserir no projeto a &lt;em&gt;tablig&lt;/em&gt;, podemos utilizar o &lt;code class=&quot;highlighter-rouge&quot;&gt;core&lt;/code&gt; da &lt;strong&gt;JSTL&lt;/strong&gt; adicionando o cabeçalho à pagina &lt;strong&gt;JSP&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsp&quot;&gt;&amp;lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;O parâmetro &lt;code class=&quot;highlighter-rouge&quot;&gt;prefix&lt;/code&gt; deste cabeçalho será usado como &lt;em&gt;tag&lt;/em&gt; na nossa página. O padrão do prefixo é “c” (&lt;code class=&quot;highlighter-rouge&quot;&gt;core&lt;/code&gt;).&lt;br /&gt;
+Os loops da &lt;strong&gt;JSTL&lt;/strong&gt; são feitos com o &lt;code class=&quot;highlighter-rouge&quot;&gt;forEach&lt;/code&gt;, com parâmetros &lt;code class=&quot;highlighter-rouge&quot;&gt;var&lt;/code&gt; (para variável que armazenará o valor atual) e &lt;code class=&quot;highlighter-rouge&quot;&gt;items&lt;/code&gt; (que receberá a lista a ser iterada).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsp&quot;&gt;&amp;lt;c:forEach var=&quot;item&quot; items=&quot;objeto.listaDeItens&quot;&amp;gt;
+    ${item}
+&amp;lt;/c:forEach&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A condicional do &lt;strong&gt;JSTL&lt;/strong&gt; é feita utilizando o &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; passando o parâmetro &lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;, onde é validada uma expressão (&lt;em&gt;Expression Language&lt;/em&gt;).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-jsp&quot;&gt;&amp;lt;c:if test=&quot;${ obj.param1 &amp;gt; obj.param2 }&quot;&amp;gt;
+    ${obj.param1}
+&amp;lt;/c:if&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Wed, 04 Nov 2015 17:40:23 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-jsps/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-jsps/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Java EE] Redirects</title>
+        <description>&lt;p&gt;Após receber e tratar a requisição, a servlet pode redirecionar a mesma para um outro endereço, dando a possibilidade de separar a camada de visualização das regras de negócio. Para tal, o redirecionamento pode ser feito de duas maneiras, no cliente ou no servidor.&lt;br /&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;p&gt;O redirecionamento no cliente é feito usando o método sendRedirect do &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpServletResponse&lt;/code&gt;, passando um endereço.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;resp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sendRedirect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pagina.html&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ao enviar o redirecionamento, o servidor retorna o código &lt;code class=&quot;highlighter-rouge&quot;&gt;302&lt;/code&gt; para o cliente, informando que o recurso foi encontrado e o cliente faz uma nova requisição para o endereço “/pagina.html”.&lt;/p&gt;
+
+&lt;p&gt;Já o redirecionamento no servidor é feito com o uso da classe &lt;code class=&quot;highlighter-rouge&quot;&gt;RequestDispatcher&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;javax.servlet&lt;/code&gt;) que pego através da requisição utilizando o método &lt;code class=&quot;highlighter-rouge&quot;&gt;getRequestDispatcher&lt;/code&gt; do &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpServletRequest&lt;/code&gt; passando como parâmetro a &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; contendo o caminho do recurso para onde o servidor redirecionará. Após isto, deve-se utilizar o método &lt;code class=&quot;highlighter-rouge&quot;&gt;forward&lt;/code&gt; do &lt;code class=&quot;highlighter-rouge&quot;&gt;RequestDispatcher&lt;/code&gt; para redirecionar.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;RequestDispatcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dispatcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getRequestDispatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/caminho/para/o/recurso&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;dispatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forward&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;O redirecionamento no servidor é invisível ao cliente, parecendo para este que permaneceu na mesma página.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 04 Nov 2015 17:06:00 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-redirects/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-redirects/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Java EE] Sessions</title>
+        <description>&lt;p&gt;As sessões funcionam de forma similar aos cookies, porém o armazenamento da informação fica no próprio servidor, sendo gerada uma chave randômica que é enviada ao cliente para poder acessar àquela informação. Uma sessão em java é um objeto da classe &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpSession&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;javax.servlet.http&lt;/code&gt;) e pode ser acessada no servidor através do método da requisição &lt;code class=&quot;highlighter-rouge&quot;&gt;getSession&lt;/code&gt;.&lt;br /&gt;
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Session&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;session&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Diferentemente dos cookies que só recebiam parâmetros com o tipo &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt;, as sessions podem receber quaisquer tipos de objetos como atributos. Para tal, utilizamos o método &lt;code class=&quot;highlighter-rouge&quot;&gt;setAttribute&lt;/code&gt; da classe &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpSession&lt;/code&gt; que receberá uma chave com uma &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; descrevendo o que será armazenado e um valor que será o objeto a ser preservado na sessão.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;chave&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;valor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para acessar o atributo, usamos o método &lt;code class=&quot;highlighter-rouge&quot;&gt;getAttribute&lt;/code&gt;, passando a chave que foi cadastrada para o atributo.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;chave&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Para remover o atributo da sessão, usa-se o método &lt;code class=&quot;highlighter-rouge&quot;&gt;removeAttribute&lt;/code&gt; do &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpSession&lt;/code&gt;, passando a chave do atributo a ser removido.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;removeAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;chave&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Podemos também invalidar a sessão caso se deseje perder todos os atributos cadastrados na mesma.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;invalidate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 04 Nov 2015 16:04:23 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-sessions/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-sessions/</guid>
+      </item>
+    
+      <item>
+        <title>[Aprendendo Java EE] Cookies</title>
+        <description>&lt;p&gt;É possível manter algumas informações do usuário através de cookies. Um cookie é uma estrutura de chave e valor que é enviada do servidor para o cliente e que este armazena por um tempo previamente determinado. Esse par de &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt;s é criado no servidor através da classe &lt;code class=&quot;highlighter-rouge&quot;&gt;Cookie&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;javax.servlet.http&lt;/code&gt;) e enviado através do response &lt;code class=&quot;highlighter-rouge&quot;&gt;HttpServletResponse&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;javax.servlet.http&lt;/code&gt;).&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Cookie&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;resp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addCookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Após o cookie estar armazenado no cliente, a cada chamada ao servidor, o cookie é enviado na requisição. No servidor, os cookies podem ser pegos através do método da requisição &lt;code class=&quot;highlighter-rouge&quot;&gt;getCookies&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getCookies&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Este método retornará todos os cookies enviados para o servidor e pode-se iterar nesse array para encontrar a chave que se está procurando.&lt;/p&gt;
+
+&lt;p&gt;Porém, há uma particularidade na utilização de cookies. Como os cookies são armazenados no lado do cliente, o usuário pode manipular as informações contidas nesses cookies e então reenviar ao servidor. Assim, o servidor pode receber essas alterações e processá-las indevidamente. Sendo assim, é desencorajada a utilização de cookies para envio de informações que serão usadas sem algum tipo de validação das mesmas.&lt;/p&gt;
+
+&lt;p&gt;Quando o cookie é enviado para o  cliente, ele vai com uma informação referente ao tempo que aquele cookie viverá. Caso se deseje setar ou alterar essa informação deve-se utilizar o método &lt;code class=&quot;highlighter-rouge&quot;&gt;maxAge&lt;/code&gt; contido no cookie, sendo o parâmetro passado um valor em segundos.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setMaxAge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// O tempo de vida desse cookie é de 10 segundos.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Caso deseje-se remover o cookie, alteramos o valor para &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setMaxAge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Remove o cookie da requisição.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;resp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addCookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Envia o cookie de volta para o cliente através do response.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 04 Nov 2015 15:21:18 +0000</pubDate>
+        <link>http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-cookies/</link>
+        <guid isPermaLink="true">http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-cookies/</guid>
+      </item>
+    
+  </channel>
+</rss>
