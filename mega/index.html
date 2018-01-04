@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Super Mega - Sistema de greação de números aleatórios para sorteios das principais loterias brasileiras: Mega-sena, Lotofácil, Quina e Lotomania." />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="style.css" />
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<title>Super Mega - Gerador de números para sorteios da MEGA-SENA, LOTOFÁCIL, QUINA e LOTOMANIA</title>
+	</head>
+	<body ng-app="myApp" ng-controller="sorteioCtrl">
+
+		<div class="jumbotron white header" style="background-color:{{cor}}">
+			<div class="container">
+				<h1 class="text-center">Gerador de Sorteios</h1>
+				<h2 class="text-center hidden-xs" ng-bind="jogo">MEGA-SENA</h2>
+			</div>
+		</div>
+		
+		<div class="row products">
+			<div class="col-sm-3" ng-click="get($event)">
+				<h3 class="mega nome-loteria">MEGA-SENA</h3>
+			</div>
+			
+			<div class="col-sm-3" ng-click="get($event)">
+				<h3 class="loto nome-loteria">LOTOFÁCIL</h3>
+			</div>
+
+			<div class="col-sm-3" ng-click="get($event)">
+				<h3 class="quina nome-loteria">QUINA</h3>
+			</div>
+			
+			<div class="col-sm-3" ng-click="get($event)">
+				<h3 class="mania nome-loteria">LOTOMANIA</h3>
+			</div>
+
+		</div>
+		<div class="container balls">
+			<ul class="row">
+				<li ng-repeat="ball in balls" class="col-md-2 col-sm-4 col-xs-6">
+					<p class="text-center" style="background-color:{{ cor }}">{{ ball }}</p>
+				</li>
+			</ul>
+			<div class="row row-button">
+				<div class="col-sm-3 col-md-4"></div>
+				<div class="col-sm-6 col-md-4">
+					<button href="#" ng-click="get()" class="btn btn-danger btn-lg btn-block text-uppercase">Gerar números</button>	
+				</div>
+				<div class="col-sm-3 col-md-4"></div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-3"></div>
+				<div class="col-xs-6 share">
+					  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fisaque.bressy.com.br%2Fmega&t=Gerador%20de%20Sorteios%20da%20Mega-Sena" title="Share on Facebook" target="_blank"><img src="img/social/Facebook.png"></a>
+					  <a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fisaque.bressy.com.br%2Fmega&text=Gerador%20de%20Sorteios%20da%20Mega-Sena:%20http%3A%2F%2Fisaque.bressy.com.br%2Fmega&via=isaquebressy" target="_blank" title="Tweet"><img src="img/social/Twitter.png"></a>
+					  <a href="https://plus.google.com/share?url=http%3A%2F%2Fisaque.bressy.com.br%2Fmega" target="_blank" title="Share on Google+"><img src="img/social/Google+.png"></a>
+				</div>
+				<div class="col-xs-3"></div>
+			</div>
+		</div>
+		<div class="jumbotron footer white">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-9">
+						<h3>Sobre o site</h3>
+						<p>Este site gera números aleatórios para os principais sorteios das loterias brasileiras.<br/>
+						Recomendamos a utilização desses sorteios para a geração de combinações para serem jogadas nos seguintes jogos:<br/>
+						MEGA-SENA, LOTO-FÁCIL, QUINA e LOTOMANIA<br/>
+						</p>
+						<p>
+						Os jogos contidos neste site não tem nenhum tipo de relação aos jogos reais. Assim, nenhum resultado obtido através deste poderá ser associado com os jogos da Caixa Econômica Federal.<br/>
+						A utilização do sistema de geração de jogos é apenas servir de auxílio na escolha dos números aleatórios para realização de jogos oficiais.</p>
+
+						<p>As imagens das loterias foram obtidas do site da <a href="http://loterias.caixa.gov.br/wps/portal/loterias">Caixa</a>.</p>
+
+						<p>Dúvidas e sugestões em <a href="mailto:mega@isaque.bressy.com.br">isaque@bressy.com.br</a></p>
+					</div>
+					<div class="col-md-3">
+						<!-- anuncio-quadrado-mega -->
+						<ins class="adsbygoogle"
+						     style="display:inline-block;width:336px;height:280px"
+						     data-ad-client="ca-pub-1353963068901655"
+						     data-ad-slot="4422251366"></ins>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+		<script>
+			var app = angular.module('myApp', []);
+			app.controller('sorteioCtrl', function($scope, $http) {
+			  $scope.jogo = "MEGA-SENA";
+			  $scope.cor = "#209869";
+
+			  $scope.get = function($event) {
+			  	if ($event != undefined) {
+			  		$scope.jogo = $event.currentTarget.firstElementChild.textContent;
+			  		$scope.mudarJogo();
+			  	}
+
+			  	$scope.sortear($scope.min, $scope.max, $scope.num);
+			  }
+
+			  $scope.sortear = function(min, max, num) {
+			  	if (min === undefined) min = 1;
+			  	if (max === undefined) max = 60;
+			  	if (num === undefined) num = 6;
+			  	var globe = [];
+			  	for (var i = min; i <= max; i++) {
+			  		globe.push(i);
+			  	}
+
+			  	$scope.balls = shuffle(globe).slice(0,num).sort(function(a, b){return a-b});
+			  }
+
+			  $scope.mudarJogo = function() {
+			  	switch($scope.jogo) {
+			  		case "LOTOFÁCIL":
+			  			$scope.cor="#930089";
+			  			$scope.min=1;
+			  			$scope.max=25;
+			  			$scope.num=15;
+			  			break;
+			  		case "QUINA":
+			  			$scope.cor="#260085";
+			  			$scope.min=1;
+			  			$scope.max=80;
+			  			$scope.num=5;
+			  			break;
+			  		case "LOTOMANIA":
+			  			$scope.cor="#f78100";
+			  			$scope.min=1;
+			  			$scope.max=99;
+			  			$scope.num=20;
+			  			break;
+			  		default:
+			  			$scope.cor="#209869";
+			  			$scope.min=1;
+			  			$scope.max=60;
+			  			$scope.num=6;
+			  			break;
+			  	}
+			  }
+			  $scope.get();
+			});
+
+			//+ Jonas Raoni Soares Silva
+			//@ http://jsfromhell.com/array/shuffle [v1.0]
+			shuffle = function(o){ //v1.0
+				for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+				return o;
+			};
+        </script>
+        <script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-52974014-2', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
+	</body>
+</html>

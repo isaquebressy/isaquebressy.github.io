@@ -1,0 +1,105 @@
+* {
+	font-family: "FuturaWeb", sans-serif;
+}
+
+.footer p {
+	font-size: 14px;
+}
+
+ul {
+	/*margin-top:20px;*/
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+
+li {
+	margin:0;
+	padding:0;
+}
+
+li p {
+	/*display: inline-block;*/
+	/*margin: 0 12px 0 0;*/
+	font-size: 70px;
+	color: #fff;
+	background: #209869;
+	border-radius: 2em;
+	width: 2em;
+	height: 2em;
+	padding: 15px 0;
+	/*text-align: center*/
+}
+
+button {
+	margin-top: 10px;
+}
+
+.products {
+	margin:0 0 50px 0;
+	padding:15px 20px;
+}
+
+.header {
+	margin:0;
+}
+
+.white {
+	color:white;
+}
+
+.row-button {
+	margin-top: 60px;
+}
+
+.footer {
+	background-color: #2a2730;
+	margin: 70px 0 0 0;
+}
+
+.nome-loteria {
+	letter-spacing: -.035em;
+	line-height: 1.3;
+	font-size: 1.7em;
+	font-weight: 600;
+	max-height: 40px;
+	padding-left: 49px;
+	padding-top: 4px;
+	background: url("img/icos_loterias.png") no-repeat;
+	cursor:pointer;
+}
+
+.mega {
+	color: #209869;
+	background-position: left top;
+}
+
+.loto {
+	color: #930089;
+	background-position: left -45px;
+}
+
+.quina {
+	color: #260085;
+	background-position: left -91px;
+}
+
+.mania {
+	color: #f78100;
+	background-position: left -136px;
+}
+
+.dupla {
+	color: #a61324;
+	background-position: left -225px;
+}
+
+.federal {
+	color: #103099;
+	background-position: left -269px;
+}
+
+.share {
+	margin-top: 10px;
+	text-align: center;
+}
