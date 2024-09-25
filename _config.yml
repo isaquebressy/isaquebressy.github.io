@@ -1,0 +1,35 @@
+# Site settings
+title: "Isaque Bressy"
+email: isaque@bressy.com.br
+description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+baseurl: ""
+url: "http://isaque.bressy.com.br"
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Add custom collections
+collections:
+  work:
+    output: true
+
+# Set defaults
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"    
+      author: "Isaque Bressy"
+      date: "2024-09-25 00:00:00 +0000"
+      title: ""
+      category: ""
+      tags: []

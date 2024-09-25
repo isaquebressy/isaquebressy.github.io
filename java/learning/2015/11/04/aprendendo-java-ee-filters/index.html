@@ -1,166 +1,0 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>[Aprendendo Java EE] Filters</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="This is my site.">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
-    <link rel="canonical" href="http://0.0.0.0:4000/java/learning/2015/11/04/aprendendo-java-ee-filters/">
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="/assets/css/main.css">
-
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/assets/js/hover.zoom.js" ></script>
-    <script src="/assets/js/hover.zoom.conf.js"></script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-</head>
-
-
-
-    <body>
-
-    <!-- Static navbar -->
-    <div class="navbar navbar-inverse navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Isaque Bressy</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <!-- <li><a href="/work/">Work</a></li> -->
-            <!-- <li><a href="/about/">About</a></li> -->
-            <li><a href="/blog/">Blog</a></li>
-            <!-- <li><a href="/contact/">Contact</a></li> -->
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-
-
-    	<!-- +++++ Post +++++ -->
-	<div id="white">
-	    <div class="container">
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
-					<p><img src="/assets/img/user.png" width="50px" height="50px"> <ba>isaquebressy</ba></p>
-					<p><bd>November 4, 2015</bd></p>
-					<h4>[Aprendendo Java EE] Filters</h4>
-					<p></p>
-					<p><p>Os filtros são interceptadores de requisições e serão chamados antes do fluxo padrão da aplicação e estes poderão ou não dar prosseguimento a este fluxo. Caso haja a necessidade da utilização de mais de um filtro, uma cadeia de filtro pode ser utilizada, sendo que cada filtro executa e pode chamar o próximo para que seja executado.</p>
-
-<!--more-->
-<p>Para criar um filtro, deve-se declarar uma classe que implementa <code class="highlighter-rouge">Filter</code> (<code class="highlighter-rouge">javax.servlet</code>), com os métodos <code class="highlighter-rouge">init</code>, <code class="highlighter-rouge">destroy</code> e <code class="highlighter-rouge">doFilter</code>. Este último recebe uma cadeia de filtros <code class="highlighter-rouge">FilterChain</code> (<code class="highlighter-rouge">javax.servlet</code>) e é através desta que um filtro chama o próximo para executar, dando prosseguimento à seqüência de execução.</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyFilter</span> <span class="kd">implements</span> <span class="n">Filter</span> <span class="o">{</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">destroy</span><span class="o">()</span> <span class="o">{</span>
-    <span class="o">}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="n">ServletRequest</span> <span class="n">req</span><span class="o">,</span> <span class="n">ServletResponse</span> <span class="n">resp</span><span class="o">,</span> <span class="n">FilterChain</span> <span class="n">chain</span><span class="o">)</span>
-            <span class="kd">throws</span> <span class="n">IOException</span><span class="o">,</span> <span class="n">ServletException</span> <span class="o">{</span>
-        <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">req</span><span class="o">,</span> <span class="n">resp</span><span class="o">);</span>
-    <span class="o">}</span>
-
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">FilterConfig</span> <span class="n">arg0</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServletException</span> <span class="o">{</span>
-    <span class="o">}</span>
-
-<span class="o">}</span>
-</code></pre>
-</div>
-
-<p>O método <code class="highlighter-rouge">doFilter</code> do <code class="highlighter-rouge">FilterChain</code> dá prosseguimento à cadeia, chamando o próximo filtro ou a aplicação.<br />
-Para o filtro executar, devemos mapear quais urls ele irá interceptar. Fazemos isso como nas <code class="highlighter-rouge">Servlets</code>, declarando e mapeando os filtros no <code class="highlighter-rouge">web.xml</code> ou usando anotações.</p>
-
-<ol>
-  <li>Mapeando em <code class="highlighter-rouge">web.xml</code>: Primeiramente, define-se o filtro com o seu nome e sua classe, usando a tag <code class="highlighter-rouge">&lt;filter&gt; </code>. Depois, mapeia-se o padrão da url utilizando o nome definido anteriormente.</li>
-</ol>
-
-<div class="language-xml highlighter-rouge"><pre class="highlight"><code>    <span class="nt">&lt;filter&gt;</span> 
-    <span class="nt">&lt;filter-name&gt;</span>meuFiltro<span class="nt">&lt;/filter-name&gt;</span> 
-    <span class="nt">&lt;filter-class&gt;</span>my.project.package.filtro.MeuFiltro<span class="nt">&lt;/filter-class&gt;</span>
-   <span class="nt">&lt;/filter&gt;</span>
-    <span class="nt">&lt;filter-mapping&gt;</span> 
-    <span class="nt">&lt;filter-name&gt;</span>meuFiltro<span class="nt">&lt;/filter-name&gt;</span> 
-    <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
-   <span class="nt">&lt;/filter-mapping&gt;</span> 
-</code></pre>
-</div>
-
-<ol>
-  <li>Através da anotação na classe: Usa-se a anotação <code class="highlighter-rouge">@WebFilter</code> (<code class="highlighter-rouge">javax.servlet.annotation</code>) para informar que a classe é uma servlet.  O padrão da url é definido utilizando-se o parâmetro <code class="highlighter-rouge">urlPatterns</code>.</li>
-</ol>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="err">  </span><span class="nd">@WebFilter</span><span class="o">(</span><span class="n">urlPatterns</span> <span class="o">=</span> <span class="s">"/url"</span><span class="o">)</span><span class="err"> </span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ServletClass</span> <span class="kd">extends</span> <span class="n">HttpServlet</span> <span class="o">{</span>
-</code></pre>
-</div>
-
-<p>Para o filtro ser executado em qualquer requisição o mapeamento deve ser feito usando a url “/*”</p>
-</p>
-					<br>
-					<p><bt>Category:  <a href="#">java</a>  <a href="#">learning</a>  <a href="#"></a> </bt></p>
-					<p><bt>Tags:  <a href="#">java</a>  <a href="#">language</a>  <a href="#">programming</a> </bt></p>					
-					<hr>
-					<p><a href="/blog/"># Back</a></p>
-				</div>
-
-			</div><!-- /row -->
-	    </div> <!-- /container -->
-	</div><!-- /white -->
-
-    <div id="footer">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-4">
-				<h4>Contato</h4>
-				<p>isaque@bressy.com.br</p>
-			</div><!-- /col-lg-4 -->
-			
-			<div class="col-lg-4">
-				<h4>Links</h4>
-				<p>
-					<a href="http://facebook.com/isaque.bressy">Facebook</a><br/>
-					<a href="https://plus.google.com/+IsaqueBressy">Google+</a><br/>
-					<a href="https://twitter.com/isaquebressy">Twitter</a>
-				</p>
-			</div><!-- /col-lg-4 -->
-			
-			<div class="col-lg-4">
-				<h4>About Stanley</h4>
-				<p>This cute theme was created to showcase your work in a simple way. Use it wisely.</p>
-			</div><!-- /col-lg-4 -->
-		
-		</div>
-	
-	</div>
-</div>
-
-
-	<!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/assets/js/bootstrap.min.js"></script>
-
-
-    </body>
-</html>
