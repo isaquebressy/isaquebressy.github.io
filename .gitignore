@@ -1,4 +1,11 @@
-.DS_Store
-_site/*
+# Build e cache do Jekyll (nunca versionar)
+_site/
 .jekyll-cache/
 .jekyll-metadata
+
+# macOS / editor
+.DS_Store
+**/.DS_Store
+
+# Ruby local (se usar bundle install --path vendor)
+vendor/
