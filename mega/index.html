@@ -19,22 +19,33 @@
 	</head>
 	<body ng-app="myApp" ng-controller="sorteioCtrl">
 
-		<p class="container text-center" ng-show="carregando" style="padding:2em;">Carregando jogos…</p>
-		<p class="container alert alert-danger" ng-show="erroJogos" ng-bind="erroJogos"></p>
+		<p class="container text-center mega-loading" ng-show="carregando">Carregando jogos…</p>
+		<p class="container alert alert-danger mega-erro" ng-show="erroJogos" ng-bind="erroJogos"></p>
 
 		<div ng-show="!carregando && !erroJogos">
 		<div class="jumbotron white header" style="background-color:{{cor}}">
 			<div class="container">
 				<h1 class="text-center">Gerador de Sorteios</h1>
-				<h2 class="text-center hidden-xs" ng-bind="jogoNomeMenu">MEGA-SENA</h2>
+				<h2 class="text-center" ng-bind="jogoNomeMenu">MEGA-SENA</h2>
 			</div>
 		</div>
-		
-		<div class="row products">
-			<div ng-repeat="j in jogos track by j.id" ng-click="selecionarJogo(j)" ng-class="colClassMenu()">
-				<h3 class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></h3>
+
+		<nav class="mega-nav-loterias" aria-label="Escolha da loteria">
+			<div class="container">
+				<p class="mega-section-eyebrow">Escolha a loteria</p>
+				<div class="mega-loteria-list">
+					<button type="button" class="mega-loteria-btn"
+						ng-repeat="j in jogos track by j.id"
+						ng-click="selecionarJogo(j)"
+						ng-class="{'is-selected': jogoAtual.id === j.id}"
+						ng-attr-aria-pressed="{{ jogoAtual.id === j.id ? 'true' : 'false' }}"
+						ng-style="jogoAtual.id === j.id ? {'borderColor': j.cor, 'boxShadow': '0 4px 20px rgba(0,0,0,0.08)'} : {}">
+						<span class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></span>
+						<span class="mega-loteria-check" ng-if="jogoAtual.id === j.id">Selecionada</span>
+					</button>
+				</div>
 			</div>
-		</div>
+		</nav>
 
 		<div class="container regras-jogo">
 			<div class="well">
@@ -48,28 +59,34 @@
 		</div>
 
 		<div class="container balls">
-			<div class="row aposta-control">
-				<div class="col-sm-6 text-center" style="margin-bottom:12px;">
-					<label for="qtdSorteios">Quantos sorteios gerar:</label>
-					<select id="qtdSorteios" class="form-control" ng-model="qtdSorteios" ng-options="n for n in qtdSorteiosOpcoes" ng-change="sortearAtual()"></select>
-				</div>
-				<div class="col-sm-6 text-center" ng-hide="apostaMin === apostaMax" style="margin-bottom:12px;">
-					<label for="qtdAposta">Números por aposta:</label>
-					<select id="qtdAposta" class="form-control" ng-model="apostaQtd" ng-options="n for n in apostaOpcoes" ng-change="sortearAposta()"></select>
+			<div class="mega-controls">
+				<div class="mega-controls-inner">
+					<div class="mega-control-field">
+						<label class="mega-control-label" for="qtdSorteios">Quantos jogos gerar</label>
+						<select id="qtdSorteios" class="mega-control-select" ng-model="qtdSorteios" ng-options="n for n in qtdSorteiosOpcoes" ng-change="sortearAtual()"></select>
+					</div>
+					<div class="mega-control-field" ng-hide="apostaMin === apostaMax">
+						<label class="mega-control-label" for="qtdAposta">Números por aposta</label>
+						<select id="qtdAposta" class="mega-control-select" ng-model="apostaQtd" ng-options="n for n in apostaOpcoes" ng-change="sortearAposta()"></select>
+					</div>
 				</div>
 			</div>
-			<div ng-repeat="bloco in blocosSorteio track by $index" class="sorteio-bloco">
-				<h4 class="sorteio-bloco-titulo" ng-if="blocosSorteio.length > 1">Sorteio {{ $index + 1 }} de {{ blocosSorteio.length }}</h4>
-				<ul class="row" ng-class="{'layout-lotomania': formatoBolas === 'lotomania', 'layout-muitas-bolas': apostaQtd > 12 && formatoBolas !== 'lotomania'}">
-					<li ng-repeat="ball in bloco track by ball" class="col-md-2 col-sm-4 col-xs-6">
-						<p class="text-center" style="background-color:{{ cor }}" ng-bind="formatBola(ball)"></p>
-					</li>
-				</ul>
+
+			<div class="mega-sorteios-stack">
+				<section ng-repeat="bloco in blocosSorteio track by $index" class="mega-sorteio-card" ng-class="$index % 2 === 0 ? 'mega-sorteio-card--a' : 'mega-sorteio-card--b'" aria-label="{{ blocosSorteio.length > 1 ? 'Sorteio ' + ($index + 1) + ' de ' + blocosSorteio.length : 'Resultado do jogo' }}">
+					<h3 class="mega-sorteio-card-titulo" ng-if="blocosSorteio.length > 1">Sorteio {{ $index + 1 }} de {{ blocosSorteio.length }}</h3>
+					<ul class="mega-bolas-grid" ng-class="{'is-lotomania': formatoBolas === 'lotomania', 'is-muitas': apostaQtd > 12 && formatoBolas !== 'lotomania'}">
+						<li ng-repeat="ball in bloco track by ball" class="mega-bola-item">
+							<span class="mega-bola" style="background-color:{{ cor }}" ng-bind="formatBola(ball)"></span>
+						</li>
+					</ul>
+				</section>
 			</div>
+
 			<div class="row row-button">
 				<div class="col-sm-3 col-md-4"></div>
 				<div class="col-sm-6 col-md-4">
-					<button type="button" ng-click="sortearAtual()" class="btn btn-danger btn-lg btn-block text-uppercase">Gerar números</button>	
+					<button type="button" ng-click="sortearAtual()" class="btn btn-lg btn-block text-uppercase mega-btn-gerar" ng-style="{ 'background-color': cor, 'color': '#fff' }">Gerar números</button>
 				</div>
 				<div class="col-sm-3 col-md-4"></div>
 			</div>
@@ -131,17 +148,6 @@
 					$scope.qtdSorteiosOpcoes.push(qi);
 				}
 				$scope.qtdSorteios = 1;
-
-				$scope.colClassMenu = function() {
-					var n = ($scope.jogos || []).length;
-					if (n >= 6) {
-						return 'col-xs-4 col-sm-2';
-					}
-					if (n === 5) {
-						return 'col-xs-6 col-sm-2';
-					}
-					return 'col-xs-6 col-sm-3';
-				};
 
 				function aplicarConfig(j) {
 					if (!j) {
