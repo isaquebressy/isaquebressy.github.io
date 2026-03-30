@@ -1,0 +1,8 @@
+{
+  "games": [
+    "mega-sena.json",
+    "lotofacil.json",
+    "quina.json",
+    "lotomania.json"
+  ]
+}

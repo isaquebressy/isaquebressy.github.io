@@ -19,41 +19,50 @@
 	</head>
 	<body ng-app="myApp" ng-controller="sorteioCtrl">
 
+		<p class="container text-center" ng-show="carregando" style="padding:2em;">Carregando jogos…</p>
+		<p class="container alert alert-danger" ng-show="erroJogos" ng-bind="erroJogos"></p>
+
+		<div ng-show="!carregando && !erroJogos">
 		<div class="jumbotron white header" style="background-color:{{cor}}">
 			<div class="container">
 				<h1 class="text-center">Gerador de Sorteios</h1>
-				<h2 class="text-center hidden-xs" ng-bind="jogo">MEGA-SENA</h2>
+				<h2 class="text-center hidden-xs" ng-bind="jogoNomeMenu">MEGA-SENA</h2>
 			</div>
 		</div>
 		
 		<div class="row products">
-			<div class="col-sm-3" ng-click="get($event)">
-				<h3 class="mega nome-loteria">MEGA-SENA</h3>
+			<div ng-repeat="j in jogos track by j.id" ng-click="selecionarJogo(j)" ng-class="colClassMenu()">
+				<h3 class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></h3>
 			</div>
-			
-			<div class="col-sm-3" ng-click="get($event)">
-				<h3 class="loto nome-loteria">LOTOFÁCIL</h3>
-			</div>
-
-			<div class="col-sm-3" ng-click="get($event)">
-				<h3 class="quina nome-loteria">QUINA</h3>
-			</div>
-			
-			<div class="col-sm-3" ng-click="get($event)">
-				<h3 class="mania nome-loteria">LOTOMANIA</h3>
-			</div>
-
 		</div>
+
+		<div class="container regras-jogo">
+			<div class="well">
+				<h4>Regras da modalidade (Loterias CAIXA)</h4>
+				<p><strong>Sorteio:</strong> <span ng-bind="sorteioQtd"></span> números sorteados no globo, entre <span ng-bind="min"></span> e <span ng-bind="max"></span>.</p>
+				<p><strong>Aposta simples no volante:</strong> escolha de <strong ng-bind="apostaMin"></strong> a <strong ng-bind="apostaMax"></strong> números.</p>
+				<p ng-if="tipoTextoPremio === 'faixa'"><strong>Faixas de prêmio por acertos:</strong> de <strong ng-bind="premioAcertosMin"></strong> a <strong ng-bind="premioAcertosMax"></strong> números acertados (prêmio mínimo ao máximo).</p>
+				<p ng-if="tipoTextoPremio === 'lotomania'"><strong>Faixas de prêmio por acertos:</strong> premiação para <strong>0 acertos</strong> (faixa especial) e para <strong>15 a 20 acertos</strong> (prêmio mínimo ao máximo da grade usual).</p>
+				<p class="text-muted small" style="margin-bottom:0;">Confira valores de aposta e regulamento em <a href="https://loterias.caixa.gov.br/wps/portal/loterias/home/loterias" target="_blank" rel="noopener">loterias.caixa.gov.br</a>. Regras podem ser alteradas pela CAIXA.</p>
+			</div>
+		</div>
+
 		<div class="container balls">
-			<ul class="row">
+			<div class="row aposta-control" ng-hide="apostaMin === apostaMax">
+				<div class="col-sm-12 text-center">
+					<label for="qtdAposta">Quantidade de números nesta aposta:</label>
+					<select id="qtdAposta" class="form-control" ng-model="apostaQtd" ng-options="n for n in apostaOpcoes" ng-change="sortearAposta()"></select>
+				</div>
+			</div>
+			<ul class="row" ng-class="{'layout-lotomania': formatoBolas === 'lotomania', 'layout-muitas-bolas': apostaQtd > 12 && formatoBolas !== 'lotomania'}">
 				<li ng-repeat="ball in balls" class="col-md-2 col-sm-4 col-xs-6">
-					<p class="text-center" style="background-color:{{ cor }}">{{ ball }}</p>
+					<p class="text-center" style="background-color:{{ cor }}" ng-bind="formatBola(ball)"></p>
 				</li>
 			</ul>
 			<div class="row row-button">
 				<div class="col-sm-3 col-md-4"></div>
 				<div class="col-sm-6 col-md-4">
-					<button href="#" ng-click="get()" class="btn btn-danger btn-lg btn-block text-uppercase">Gerar números</button>	
+					<button type="button" ng-click="sortearAtual()" class="btn btn-danger btn-lg btn-block text-uppercase">Gerar números</button>	
 				</div>
 				<div class="col-sm-3 col-md-4"></div>
 			</div>
@@ -95,63 +104,131 @@
 				</div>
 			</div>
 		</div>
+		</div>
+
 		<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 		<script>
+			var GAMES_BASE = 'data/games/';
+
 			var app = angular.module('myApp', []);
-			app.controller('sorteioCtrl', function($scope, $http) {
-			  $scope.jogo = "MEGA-SENA";
-			  $scope.cor = "#209869";
+			app.controller('sorteioCtrl', function($scope, $http, $q) {
+				$scope.carregando = true;
+				$scope.erroJogos = null;
+				$scope.jogos = [];
+				$scope.jogoAtual = null;
+				$scope.jogoNomeMenu = '';
 
-			  $scope.get = function($event) {
-			  	if ($event != undefined) {
-			  		$scope.jogo = $event.currentTarget.firstElementChild.textContent;
-			  		$scope.mudarJogo();
-			  	}
+				$scope.colClassMenu = function() {
+					var n = ($scope.jogos || []).length;
+					if (n >= 6) {
+						return 'col-xs-4 col-sm-2';
+					}
+					if (n === 5) {
+						return 'col-xs-6 col-sm-2';
+					}
+					return 'col-xs-6 col-sm-3';
+				};
 
-			  	$scope.sortear($scope.min, $scope.max, $scope.num);
-			  }
+				function aplicarConfig(j) {
+					if (!j) {
+						return;
+					}
+					$scope.jogoAtual = j;
+					$scope.jogoNomeMenu = j.nomeMenu;
+					$scope.cor = j.cor;
+					$scope.min = j.min;
+					$scope.max = j.max;
+					$scope.sorteioQtd = j.sorteioQtd;
+					$scope.apostaMin = j.apostaMin;
+					$scope.apostaMax = j.apostaMax;
+					$scope.premioAcertosMin = j.premioAcertosMin;
+					$scope.premioAcertosMax = j.premioAcertosMax;
+					$scope.tipoTextoPremio = j.tipoTextoPremio || 'faixa';
+					$scope.formatoBolas = j.formatoBolas || 'padrao';
+					$scope.apostaOpcoes = [];
+					for (var n = j.apostaMin; n <= j.apostaMax; n++) {
+						$scope.apostaOpcoes.push(n);
+					}
+					$scope.apostaQtd = j.apostaMin;
+				}
 
-			  $scope.sortear = function(min, max, num) {
-			  	if (min === undefined) min = 1;
-			  	if (max === undefined) max = 60;
-			  	if (num === undefined) num = 6;
-			  	var globe = [];
-			  	for (var i = min; i <= max; i++) {
-			  		globe.push(i);
-			  	}
+				$scope.selecionarJogo = function(j) {
+					aplicarConfig(j);
+					$scope.sortear($scope.min, $scope.max, $scope.apostaQtd);
+				};
 
-			  	$scope.balls = shuffle(globe).slice(0,num).sort(function(a, b){return a-b});
-			  }
+				$scope.sortearAtual = function() {
+					$scope.sortear($scope.min, $scope.max, $scope.apostaQtd);
+				};
 
-			  $scope.mudarJogo = function() {
-			  	switch($scope.jogo) {
-			  		case "LOTOFÁCIL":
-			  			$scope.cor="#930089";
-			  			$scope.min=1;
-			  			$scope.max=25;
-			  			$scope.num=15;
-			  			break;
-			  		case "QUINA":
-			  			$scope.cor="#260085";
-			  			$scope.min=1;
-			  			$scope.max=80;
-			  			$scope.num=5;
-			  			break;
-			  		case "LOTOMANIA":
-			  			$scope.cor="#f78100";
-			  			$scope.min=1;
-			  			$scope.max=99;
-			  			$scope.num=20;
-			  			break;
-			  		default:
-			  			$scope.cor="#209869";
-			  			$scope.min=1;
-			  			$scope.max=60;
-			  			$scope.num=6;
-			  			break;
-			  	}
-			  }
-			  $scope.get();
+				$scope.formatBola = function(b) {
+					if ($scope.formatoBolas !== 'lotomania') {
+						return b;
+					}
+					if (b === 100) {
+						return '00';
+					}
+					return b < 10 ? '0' + b : String(b);
+				};
+
+				$scope.sortearAposta = function() {
+					var q = parseInt($scope.apostaQtd, 10);
+					if (isNaN(q)) {
+						q = $scope.apostaMin;
+					}
+					q = Math.min(Math.max(q, $scope.apostaMin), $scope.apostaMax);
+					$scope.apostaQtd = q;
+					$scope.sortear($scope.min, $scope.max, q);
+				};
+
+				$scope.sortear = function(min, max, num) {
+					if (min === undefined) {
+						min = 1;
+					}
+					if (max === undefined) {
+						max = 60;
+					}
+					if (num === undefined) {
+						num = 6;
+					}
+					var globe = [];
+					for (var i = min; i <= max; i++) {
+						globe.push(i);
+					}
+					$scope.balls = shuffle(globe).slice(0, num).sort(function(a, b) {
+						return a - b;
+					});
+				};
+
+				$http.get(GAMES_BASE + 'index.json').then(function(res) {
+					var files = res.data.games;
+					if (!angular.isArray(files) || files.length === 0) {
+						return $q.reject('Lista "games" vazia ou inválida em index.json.');
+					}
+					return $q.all(files.map(function(file) {
+						return $http.get(GAMES_BASE + file).then(function(r) {
+							return r.data;
+						});
+					}));
+				}).then(function(jogos) {
+					for (var i = 0; i < jogos.length; i++) {
+						if (!jogos[i].id || !jogos[i].nomeMenu) {
+							return $q.reject('Cada jogo precisa de "id" e "nomeMenu" no JSON.');
+						}
+					}
+					$scope.jogos = jogos;
+					$scope.selecionarJogo(jogos[0]);
+				}).catch(function(err) {
+					var msg = 'Erro ao carregar jogos.';
+					if (angular.isString(err)) {
+						msg = err;
+					} else if (err && err.status) {
+						msg = 'Erro HTTP ' + err.status + ' ao buscar data/games/.';
+					}
+					$scope.erroJogos = msg;
+				}).finally(function() {
+					$scope.carregando = false;
+				});
 			});
 
 			//+ Jonas Raoni Soares Silva

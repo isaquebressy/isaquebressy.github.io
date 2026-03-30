@@ -103,3 +103,62 @@ button {
 	margin-top: 10px;
 	text-align: center;
 }
+
+.regras-jogo {
+	margin-bottom: 24px;
+}
+
+.regras-jogo .well {
+	background: #fafafa;
+	border: 1px solid #e5e5e5;
+	border-radius: 6px;
+	padding: 16px 20px;
+	margin-bottom: 0;
+}
+
+.regras-jogo h4 {
+	margin-top: 0;
+	font-size: 1.15em;
+	font-weight: 600;
+}
+
+.regras-jogo p {
+	font-size: 14px;
+	line-height: 1.5;
+	margin-bottom: 10px;
+}
+
+.aposta-control label {
+	font-weight: 600;
+	margin-right: 8px;
+}
+
+.aposta-control select {
+	max-width: 120px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* Lotomania e apostas com muitas dezenas */
+.balls.layout-muitas-bolas li p {
+	font-size: 36px;
+	width: 1.65em;
+	height: 1.65em;
+	padding: 12px 0;
+}
+
+.balls.layout-lotomania li p {
+	font-size: 26px;
+	width: 1.5em;
+	height: 1.5em;
+	padding: 10px 0;
+}
+
+@media (max-width: 480px) {
+	.balls.layout-lotomania li p {
+		font-size: 22px;
+		width: 1.45em;
+		height: 1.45em;
+		padding: 8px 0;
+	}
+}

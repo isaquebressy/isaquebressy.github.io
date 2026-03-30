@@ -1,0 +1,15 @@
+{
+  "id": "mega-sena",
+  "nomeMenu": "MEGA-SENA",
+  "classeCss": "mega",
+  "cor": "#209869",
+  "min": 1,
+  "max": 60,
+  "sorteioQtd": 6,
+  "apostaMin": 6,
+  "apostaMax": 20,
+  "premioAcertosMin": 4,
+  "premioAcertosMax": 6,
+  "tipoTextoPremio": "faixa",
+  "formatoBolas": "padrao"
+}
