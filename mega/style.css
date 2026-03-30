@@ -139,6 +139,26 @@ button {
 	vertical-align: middle;
 }
 
+.sorteio-bloco {
+	margin-bottom: 2.5em;
+	padding-bottom: 1.5em;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.sorteio-bloco:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.sorteio-bloco-titulo {
+	font-size: 1.25em;
+	font-weight: 700;
+	margin: 0 0 1em 0;
+	color: #333;
+	text-align: center;
+}
+
 /* Lotomania e apostas com muitas dezenas */
 .balls.layout-muitas-bolas li p {
 	font-size: 36px;

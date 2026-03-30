@@ -48,17 +48,24 @@
 		</div>
 
 		<div class="container balls">
-			<div class="row aposta-control" ng-hide="apostaMin === apostaMax">
-				<div class="col-sm-12 text-center">
-					<label for="qtdAposta">Quantidade de números nesta aposta:</label>
+			<div class="row aposta-control">
+				<div class="col-sm-6 text-center" style="margin-bottom:12px;">
+					<label for="qtdSorteios">Quantos sorteios gerar:</label>
+					<select id="qtdSorteios" class="form-control" ng-model="qtdSorteios" ng-options="n for n in qtdSorteiosOpcoes" ng-change="sortearAtual()"></select>
+				</div>
+				<div class="col-sm-6 text-center" ng-hide="apostaMin === apostaMax" style="margin-bottom:12px;">
+					<label for="qtdAposta">Números por aposta:</label>
 					<select id="qtdAposta" class="form-control" ng-model="apostaQtd" ng-options="n for n in apostaOpcoes" ng-change="sortearAposta()"></select>
 				</div>
 			</div>
-			<ul class="row" ng-class="{'layout-lotomania': formatoBolas === 'lotomania', 'layout-muitas-bolas': apostaQtd > 12 && formatoBolas !== 'lotomania'}">
-				<li ng-repeat="ball in balls" class="col-md-2 col-sm-4 col-xs-6">
-					<p class="text-center" style="background-color:{{ cor }}" ng-bind="formatBola(ball)"></p>
-				</li>
-			</ul>
+			<div ng-repeat="bloco in blocosSorteio track by $index" class="sorteio-bloco">
+				<h4 class="sorteio-bloco-titulo" ng-if="blocosSorteio.length > 1">Sorteio {{ $index + 1 }} de {{ blocosSorteio.length }}</h4>
+				<ul class="row" ng-class="{'layout-lotomania': formatoBolas === 'lotomania', 'layout-muitas-bolas': apostaQtd > 12 && formatoBolas !== 'lotomania'}">
+					<li ng-repeat="ball in bloco track by ball" class="col-md-2 col-sm-4 col-xs-6">
+						<p class="text-center" style="background-color:{{ cor }}" ng-bind="formatBola(ball)"></p>
+					</li>
+				</ul>
+			</div>
 			<div class="row row-button">
 				<div class="col-sm-3 col-md-4"></div>
 				<div class="col-sm-6 col-md-4">
@@ -109,6 +116,7 @@
 		<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 		<script>
 			var GAMES_BASE = 'data/games/';
+			var MAX_SORTEIOS = 20;
 
 			var app = angular.module('myApp', []);
 			app.controller('sorteioCtrl', function($scope, $http, $q) {
@@ -117,6 +125,12 @@
 				$scope.jogos = [];
 				$scope.jogoAtual = null;
 				$scope.jogoNomeMenu = '';
+				$scope.blocosSorteio = [];
+				$scope.qtdSorteiosOpcoes = [];
+				for (var qi = 1; qi <= MAX_SORTEIOS; qi++) {
+					$scope.qtdSorteiosOpcoes.push(qi);
+				}
+				$scope.qtdSorteios = 1;
 
 				$scope.colClassMenu = function() {
 					var n = ($scope.jogos || []).length;
@@ -150,6 +164,7 @@
 						$scope.apostaOpcoes.push(n);
 					}
 					$scope.apostaQtd = j.apostaMin;
+					$scope.qtdSorteios = 1;
 				}
 
 				$scope.selecionarJogo = function(j) {
@@ -191,13 +206,26 @@
 					if (num === undefined) {
 						num = 6;
 					}
+					var qSort = parseInt($scope.qtdSorteios, 10);
+					if (isNaN(qSort)) {
+						qSort = 1;
+					}
+					qSort = Math.min(Math.max(qSort, 1), MAX_SORTEIOS);
+					$scope.qtdSorteios = qSort;
+
 					var globe = [];
 					for (var i = min; i <= max; i++) {
 						globe.push(i);
 					}
-					$scope.balls = shuffle(globe).slice(0, num).sort(function(a, b) {
-						return a - b;
-					});
+					var blocos = [];
+					for (var s = 0; s < qSort; s++) {
+						var copia = globe.slice();
+						var uma = shuffle(copia).slice(0, num).sort(function(a, b) {
+							return a - b;
+						});
+						blocos.push(uma);
+					}
+					$scope.blocosSorteio = blocos;
 				};
 
 				$http.get(GAMES_BASE + 'index.json').then(function(res) {
