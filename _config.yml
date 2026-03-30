@@ -10,6 +10,13 @@ lang: pt_BR
 url: "https://isaque.bressy.com.br"
 baseurl: ""
 
+# Subsites fora do Jekyll (mega/, droppingballs/, todo/): pastas na raiz com HTML
+# sem front matter são copiadas literais para _site; mantenha CSS/JS/img relativos
+# à pasta (ex. href="style.css" em mega/index.html → /mega/style.css no ar).
+# Não inicie o nome da pasta com _ (é reservado). Se precisar de front matter no HTML,
+# o Liquid interpreta {{ … }} — conflite com Angular/Vue: use {% raw %}…{% endraw %}
+# ou render_with_liquid: false (Jekyll 4+).
+
 author:
   name: Isaque Bressy
   email: isaque@bressy.com.br
