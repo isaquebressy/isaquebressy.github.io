@@ -1,19 +1,41 @@
 <div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-        {% for item in site.data.navigation %}
-            <li><a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a></li>
-        {% endfor %}
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				{% for item in site.data.navigation %}
+					{% assign href = item.link | relative_url %}
+					{% assign active = false %}
+					{% assign link_index = item.link | append: 'index.html' %}
+					{% if item.id == 'home' %}
+						{% if page.url == '/' or page.url == '/index.html' %}
+							{% assign active = true %}
+						{% endif %}
+					{% elsif item.id == 'blog' %}
+						{% if page.layout == 'post' %}
+							{% assign active = true %}
+						{% elsif page.url == item.link or page.url == link_index %}
+							{% assign active = true %}
+						{% endif %}
+					{% elsif item.id == 'work' %}
+						{% if page.layout == 'work' or page.url == item.link or page.url == link_index %}
+							{% assign active = true %}
+						{% endif %}
+					{% elsif page.url == item.link or page.url == link_index %}
+						{% assign active = true %}
+					{% endif %}
+					<li>
+						<a href="{{ href }}"{% if active %} class="nav-current"{% endif %}>{{ item.name }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>

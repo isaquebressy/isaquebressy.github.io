@@ -1,20 +1,19 @@
---- 
-published: false  # set to true to show # 
+---
+published: false
 layout: work
-title: Work Title Template
-date: 2014-07-02
-client: BlackTie.co
-type: Illustration
-img: /assets/img/portfolio/port01.jpg # Cover photo #
-description: It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. <!-- the initial description. Can be a short one. -->
+title: Título do projeto
+date: 2024-09-01
+client: ""
+type: Web
+img: /assets/img/portfolio/port01.jpg
+description: "Resumo curto para a listagem e o topo da página do projeto."
+# Opcional — links no topo da página do projeto:
+# github: https://github.com/usuario/repo
+# demo_url: https://exemplo.com
+# external_url: https://link-principal.com
 ---
 
-<!-- +++++ Work Section +++++ -->
-
 <div class="col-lg-8 col-lg-offset-2">
-    <p>More content here.</p>
-    <p><img class="img-responsive center-img" src="/assets/img/portfolio/port01.jpg" alt="Image example" /></p>
-    <p><img class="img-responsive center-img" src="{{ page.img }}" alt="Image example" /></p>
+	<p>Corpo do projeto: contexto, stack, capturas e o que aprendeu.</p>
+	<p><img class="img-responsive center-img" src="{{ page.img | relative_url }}" alt=""></p>
 </div>
-
-

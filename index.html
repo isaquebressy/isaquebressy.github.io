@@ -1,34 +1,75 @@
 ---
 layout: default
+title: Início
+description: "Blog, projetos e contato de Isaque Bressy."
 ---
+
 <div id="ww">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 centered">
-        <img src="assets/img/user.png" alt="Stanley">
-        <h1>Olá! Eu sou Isaque Bressy.</h1>
-        <p>Esta página está em desenvolvimento.</p>
-        <p>Enquanto isso, você pode entrar em contato comigo através de <br />
-          isaque@bressy.com.br</p>
-      </div><!-- /col-lg-8 -->
-    </div><!-- /row -->
-  </div> <!-- /container -->
-</div><!-- /ww -->
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 centered">
+				<img src="{{ '/assets/img/user.png' | relative_url }}" alt="{{ site.author.name }}">
+				<h1>Olá, eu sou {{ site.author.name }}.</h1>
+				<p>{{ site.description }}</p>
+				<p>
+					<a href="{{ '/blog/' | relative_url }}">Blog</a>
+					·
+					<a href="{{ '/work/' | relative_url }}">Projetos</a>
+					·
+					<a href="mailto:{{ site.email }}">E-mail</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
 
-<<!-- +++++ Projects Section +++++ -->
-
+<!-- Últimos posts -->
 <div class="container pt">
-	{% for work in site.work %}
-		{% if work.published == true %}
-			{% cycle 'add rows': '<div class="row mt centered">', '', '' %}
-		
-				<div class="col-lg-4">
-					<a class="zoom green" href="{{ work.url | prepend: site.baseurl }}"><img class="img-responsive" src="{{ work.img }}" alt="" /></a>
-					<p>{{ work.title }}</p>
-				</div>
-			
-			{% cycle 'close rows': '', '', '</div>' %}
-		{% endif %}
-	{% endfor %}
-	{% cycle 'close rows': '', '</div>', '</div>' %}
-</div><!-- /container -->
+	<div class="row mt">
+		<div class="col-lg-8 col-lg-offset-2">
+			<h3 class="centered">Últimas publicações</h3>
+			<hr>
+			{% assign recent = site.posts | slice: 0, 3 %}
+			{% if recent.size > 0 %}
+				<ul class="home-post-list">
+					{% for post in recent %}
+						<li>
+							<a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+							<span class="home-post-date">{{ post.date | date: "%d/%m/%Y" }}</span>
+						</li>
+					{% endfor %}
+				</ul>
+				<p class="centered"><a href="{{ '/blog/' | relative_url }}">Ver todas →</a></p>
+			{% else %}
+				<p class="centered">Em breve: artigos em <code>_posts/</code>. Enquanto isso, veja <a href="{{ '/work/' | relative_url }}">projetos</a>.</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<!-- Projetos em destaque -->
+<div class="container pt section-tight-top">
+	<div class="row mt">
+		<div class="col-lg-6 col-lg-offset-3 centered">
+			<h3>Projetos</h3>
+			<hr>
+			<p>Seleção do portfólio. Edite os arquivos em <code>_work/</code> e use <code>published: true</code> para exibir.</p>
+		</div>
+	</div>
+	{% assign published_work = site.work | where: "published", true %}
+	{% if published_work.size > 0 %}
+		{% for work in published_work %}
+			{% assign m = forloop.index0 | modulo: 3 %}
+			{% if m == 0 %}<div class="row mt centered">{% endif %}
+			<div class="col-lg-4">
+				<a class="zoom green" href="{{ work.url | relative_url }}">
+					<img class="img-responsive" src="{{ work.img | relative_url }}" alt="{{ work.title | escape }}">
+				</a>
+				<p><a href="{{ work.url | relative_url }}">{{ work.title }}</a></p>
+			</div>
+			{% if m == 2 or forloop.last %}</div>{% endif %}
+		{% endfor %}
+	{% else %}
+		<p class="centered"><a href="{{ '/work/' | relative_url }}">Ver página de projetos</a></p>
+	{% endif %}
+</div>

@@ -1,8 +1,15 @@
-- name: Work
-  link: /work/
-- name: About
-  link: /about/
+- name: Início
+  link: /
+  id: home
 - name: Blog
   link: /blog/
-- name: Contact
+  id: blog
+- name: Projetos
+  link: /work/
+  id: work
+- name: Sobre
+  link: /about/
+  id: about
+- name: Contato
   link: /contact/
+  id: contact

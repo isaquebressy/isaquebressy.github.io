@@ -2,23 +2,37 @@
 layout: my-site
 ---
 
-	<!-- +++++ Post +++++ -->
-	<div id="white">
-	    <div class="container">
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
-					<p><img src="{{ "/assets/img/user.png" | prepend: site.baseurl }}" width="50px" height="50px"> <ba>{{ page.author }}</ba></p>
-					<p><bd>{{ page.date | date: "%B %-d, %Y" }}</bd></p>
-					<h4>{{ page.title }}</h4>
-					<p>{% if page.img %}<img class="img-responsive" src="{{ page.img }}" alt="">{% endif %}</p>
-					<p>{{ content }}</p>
-					<br>
-					<p><bt>Category: {% for category in page.categories %} <a href="#">{{ category }}</a> {% endfor %}</bt></p>
-					<p><bt>Tags: {% for tag in page.tags %} <a href="#">{{ tag }}</a> {% endfor %}</bt></p>					
-					<hr>
-					<p><a href="{{ "/blog/" | prepend: site.baseurl }}"># Back</a></p>
-				</div>
-
-			</div><!-- /row -->
-	    </div> <!-- /container -->
-	</div><!-- /white -->
+<div id="white">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+				<article class="post-article">
+					<header class="post-header-block">
+						<p class="post-meta-line">
+							<img src="{{ '/assets/img/user.png' | relative_url }}" width="50" height="50" alt="">
+							<ba>{{ page.author | default: site.author.name }}</ba>
+						</p>
+						<p><bd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d/%m/%Y" }}</time></bd></p>
+						<h1>{{ page.title }}</h1>
+						{% if page.img %}
+							<p><img class="img-responsive" src="{{ page.img | relative_url }}" alt=""></p>
+						{% endif %}
+					</header>
+					<div class="post-body">
+						{{ content }}
+					</div>
+					<footer class="post-footer-meta">
+						{% if page.categories.size > 0 %}
+							<p><bt>Categorias: {% for c in page.categories %}<a href="{{ '/blog/tags/' | relative_url }}#cat-{{ c | slugify }}">{{ c }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</bt></p>
+						{% endif %}
+						{% if page.tags.size > 0 %}
+							<p><bt>Tags: {% for t in page.tags %}<a href="{{ '/blog/tags/' | relative_url }}#{{ t | slugify }}">{{ t }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</bt></p>
+						{% endif %}
+						<hr>
+						<p><a href="{{ '/blog/' | relative_url }}">← Voltar ao blog</a></p>
+					</footer>
+				</article>
+			</div>
+		</div>
+	</div>
+</div>

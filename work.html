@@ -1,31 +1,40 @@
 ---
 layout: default
+title: Projetos
+description: "Portfólio e experimentos."
+permalink: /work/
 ---
 
-<!-- +++++ Projects Section +++++ -->
-
-<div class="container pt">
-
-	<div class="row mt">
-		<div class="col-lg-6 col-lg-offset-3 centered">
-			<h3>MY WORK</h3>
-			<hr>
-			<p>Show your work here. Dribbble shots from the awesome designer <a href="http://dribbble.com/wanderingbert">David Creighton-Pester</a>.</p>
+<div id="ww">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 centered">
+				<h1>Projetos</h1>
+				<p>Cada item é um arquivo em <code>_work/</code> com <code>published: true</code>. Campos úteis: <code>title</code>, <code>description</code>, <code>img</code>, <code>github</code>, <code>demo_url</code>.</p>
+			</div>
 		</div>
 	</div>
-	
-	{% for work in site.work %}
-		{% if work.published == true %}
-			{% cycle 'add rows': '<div class="row mt centered">', '', '' %}
-		
-				<div class="col-lg-4">
-					<a class="zoom green" href="{{ work.url | prepend: site.baseurl }}"><img class="img-responsive" src="{{ work.img }}" alt="" /></a>
-					<p>{{ work.title }}</p>
-				</div>
-			
-			{% cycle 'close rows': '', '', '</div>' %}
-		{% endif %}
-	{% endfor %}
-	{% cycle 'close rows': '', '</div>', '</div>' %}
-	
-</div><!-- /container -->
+</div>
+
+<div class="container pt">
+	{% assign published_work = site.work | where: "published", true %}
+	{% if published_work.size == 0 %}
+		<div class="row mt">
+			<div class="col-lg-8 col-lg-offset-2 centered">
+				<p>Nenhum projeto publicado. Copie <code>_work/work-template.html</code> e ajuste o conteúdo.</p>
+			</div>
+		</div>
+	{% else %}
+		{% for work in published_work %}
+			{% assign m = forloop.index0 | modulo: 3 %}
+			{% if m == 0 %}<div class="row mt centered">{% endif %}
+			<div class="col-lg-4">
+				<a class="zoom green" href="{{ work.url | relative_url }}">
+					<img class="img-responsive" src="{{ work.img | relative_url }}" alt="{{ work.title | escape }}">
+				</a>
+				<p><a href="{{ work.url | relative_url }}">{{ work.title }}</a></p>
+			</div>
+			{% if m == 2 or forloop.last %}</div>{% endif %}
+		{% endfor %}
+	{% endif %}
+</div>

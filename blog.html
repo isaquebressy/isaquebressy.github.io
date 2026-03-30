@@ -1,23 +1,49 @@
 ---
 layout: default
+title: Blog
+description: "Artigos e notas."
+permalink: /blog/
 ---
 
+<div id="ww">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 centered">
+				<h1>Blog</h1>
+				<p>Textos sobre desenvolvimento, projetos e o que mais couber. <a href="{{ '/blog/tags/' | relative_url }}">Ver por tags</a> · <a href="{{ '/feed.xml' | relative_url }}">Feed RSS</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="posts">
-{% for post in site.posts %}
-	<div class="post-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
-					<p><img src="{{ "/assets/img/user.png" | prepend: site.baseurl }}" width="50px" height="50px"> <ba>{{ post.author }}</ba></p>
-					<p><bd>{{ post.date | date: "%B %-d, %Y" }}</bd></p>
-					<h4><a href="{{ post.url | prepend: site.baseurl }}" style="text-decoration : none; color : #000;">{{ post.title }}</a></h4>
-                    <p>{% if post.img %}<img src="{{ post.img }}">{% endif %}</p>
-					<p>{% if post.excerpt %} {{ post.excerpt }}
-                       {% else %}  {{ post.description}}  {% endif %}</p>
-					<p><a href="{{ post.url | prepend: site.baseurl }}">Continue Reading...</a></p>
+	{% if site.posts.size == 0 %}
+		<div class="post-section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 col-lg-offset-2 centered">
+						<p>Nenhum post ainda. Crie um arquivo em <code>_posts/YYYY-MM-DD-titulo.md</code> com front matter <code>title</code> e <code>date</code>.</p>
+					</div>
 				</div>
-			</div><!-- /row -->
-		</div> <!-- /container -->
-	</div> <!-- /post-section -->
-{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+	{% for post in site.posts %}
+		<div class="post-section">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 col-lg-offset-2">
+						<p><img src="{{ '/assets/img/user.png' | relative_url }}" width="50" height="50" alt=""> <ba>{{ post.author | default: site.author.name }}</ba></p>
+						<p><bd>{{ post.date | date: "%d/%m/%Y" }}</bd></p>
+						<h2><a href="{{ post.url | relative_url }}" class="post-title-link">{{ post.title }}</a></h2>
+						{% if post.img %}
+							<p><img class="img-responsive" src="{{ post.img | relative_url }}" alt=""></p>
+						{% endif %}
+						<div class="post-excerpt">{{ post.excerpt }}</div>
+						<p><a href="{{ post.url | relative_url }}">Ler mais →</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
 </div>

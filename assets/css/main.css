@@ -107,6 +107,11 @@ a:after {
 	color: #222222;
 }
 
+.navbar-inverse .navbar-nav > li > a.nav-current {
+	color: #222222;
+	font-weight: 700;
+}
+
 .navbar-brand {
 	font-weight: 700;
 	font-size: 20px;
@@ -255,4 +260,44 @@ bt {
 /* ================== CENTER IMAGE OR TEXT ================== */
 .center-img {
 	margin:0 auto;
+}
+
+.home-post-list {
+	list-style: none;
+	padding-left: 0;
+	font-size: 16px;
+	line-height: 1.8;
+}
+
+.home-post-list li {
+	margin-bottom: 12px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 12px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+.home-post-date {
+	color: #999;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+.tag-cloud {
+	font-size: 15px;
+	line-height: 1.8;
+}
+
+a.post-title-link {
+	color: #333;
+}
+
+a.post-title-link:hover {
+	color: #1abc9c;
+}
+
+.section-tight-top {
+	padding-top: 0 !important;
 }

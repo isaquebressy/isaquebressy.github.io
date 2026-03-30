@@ -2,21 +2,40 @@
 layout: my-site
 ---
 
-<!-- +++++ Projects Section +++++ -->
-
 <div class="container pt">
 	<div class="row mt">
 		<div class="col-lg-6 col-lg-offset-3 centered">
-			<h3>{{ page.title }}</h3>
+			<h1>{{ page.title }}</h1>
 			<hr>
 			<p>{{ page.description }}</p>
+			{% if page.github or page.demo_url or page.external_url %}
+				<p class="project-links">
+					{% if page.github %}
+						<a href="{{ page.github }}" rel="noopener">Código no GitHub</a>
+					{% endif %}
+					{% if page.demo_url %}
+						{% if page.github %} · {% endif %}
+						<a href="{{ page.demo_url }}" rel="noopener">Demo</a>
+					{% endif %}
+					{% if page.external_url %}
+						{% if page.github or page.demo_url %} · {% endif %}
+						<a href="{{ page.external_url }}" rel="noopener">Link</a>
+					{% endif %}
+				</p>
+			{% endif %}
 		</div>
 	</div>
 	<div class="row mt centered">
-        <p>{{ content }}</p>
-	</div><!-- /row -->
-	<div class="row mt centered">	
-		<p><bt>Client: <a href="#">{{ page.client }}</a></bt> - <bt>Type: <a href="#">{{ page.type }}</a></bt> - <bt>Date: <a href="#">{{ page.date | date: "%B %-d, %Y" }}</a></bt></p>
+		<div class="col-lg-10 col-lg-offset-1">
+			{{ content }}
+		</div>
 	</div>
-	
-</div><!-- /container -->
+	<div class="row mt centered">
+		<p>
+			{% if page.client %}<bt>Cliente: {{ page.client }}</bt>{% endif %}
+			{% if page.type %}{% if page.client %} — {% endif %}<bt>Tipo: {{ page.type }}</bt>{% endif %}
+			{% if page.date %} — <bt><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d/%m/%Y" }}</time></bt>{% endif %}
+		</p>
+		<p><a href="{{ '/work/' | relative_url }}">← Todos os projetos</a></p>
+	</div>
+</div>
