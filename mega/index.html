@@ -19,7 +19,8 @@
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<title>Super Mega - Gerador de números para sorteios da MEGA-SENA, LOTOFÁCIL, QUINA e LOTOMANIA</title>
 	</head>
-	<body ng-app="myApp" ng-controller="sorteioCtrl">
+	<body ng-app="myApp" ng-controller="sorteioCtrl"
+		ng-class="{'mega-body--pwa-banner': pwaBannerChromium || pwaBannerIos}">
 
 		<p class="container text-center mega-loading" ng-show="carregando">Carregando jogos…</p>
 		<p class="container alert alert-danger mega-erro" ng-show="erroJogos" ng-bind="erroJogos"></p>
@@ -119,6 +120,24 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="mega-pwa-banner" role="region" aria-label="Instalar aplicativo"
+			ng-show="pwaBannerChromium || pwaBannerIos">
+			<div class="mega-pwa-banner-inner container">
+				<div class="mega-pwa-banner-text" ng-if="pwaBannerChromium">
+					<strong>Super Mega</strong> pode ser instalado como aplicativo. Funciona offline depois da primeira visita.
+				</div>
+				<div class="mega-pwa-banner-text" ng-if="pwaBannerIos">
+					Para instalar no iPhone ou iPad: toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.
+				</div>
+				<div class="mega-pwa-banner-actions">
+					<button type="button" class="btn btn-sm mega-pwa-btn-install" ng-show="pwaBannerChromium"
+						ng-click="instalarPwa()">Instalar</button>
+					<button type="button" class="btn btn-sm btn-default mega-pwa-btn-later"
+						ng-click="dispensarOfertaPwa()">Agora nao</button>
+				</div>
+			</div>
+		</div>
 		</div>
 
 		<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -133,8 +152,113 @@
 			var GAMES_BASE = 'data/games/';
 			var MAX_SORTEIOS = 20;
 			var LS_REGRAS_FECHADAS = 'mega-regras-dismissed';
+			var LS_PWA_DISMISS = 'mega-pwa-install-dismissed';
+			var PWA_DISMISS_COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000;
 
 			var app = angular.module('myApp', []);
+			app.run(['$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
+				var deferredInstallPrompt = null;
+				var w = $window;
+
+				function isStandaloneDisplay() {
+					try {
+						if (w.matchMedia('(display-mode: standalone)').matches) {
+							return true;
+						}
+					} catch (e) {}
+					return w.navigator.standalone === true;
+				}
+
+				function isDismissedWithinCooldown() {
+					try {
+						var raw = w.localStorage.getItem(LS_PWA_DISMISS);
+						if (!raw) {
+							return false;
+						}
+						var t = parseInt(raw, 10);
+						if (isNaN(t)) {
+							return false;
+						}
+						return (Date.now() - t) < PWA_DISMISS_COOLDOWN_MS;
+					} catch (e) {
+						return false;
+					}
+				}
+
+				function isIosLikeDevice() {
+					var ua = w.navigator.userAgent || '';
+					if (/iPhone|iPad|iPod/.test(ua)) {
+						return true;
+					}
+					return w.navigator.platform === 'MacIntel' && w.navigator.maxTouchPoints > 1;
+				}
+
+				function isLikelySafariOnIos() {
+					if (!isIosLikeDevice()) {
+						return false;
+					}
+					var ua = w.navigator.userAgent || '';
+					if (/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua)) {
+						return false;
+					}
+					return true;
+				}
+
+				$rootScope.pwaBannerChromium = false;
+				$rootScope.pwaBannerIos = false;
+
+				if (isStandaloneDisplay() || isDismissedWithinCooldown()) {
+					return;
+				}
+
+				w.addEventListener('beforeinstallprompt', function(e) {
+					e.preventDefault();
+					deferredInstallPrompt = e;
+					$rootScope.$apply(function() {
+						$rootScope.pwaBannerChromium = true;
+						$rootScope.pwaBannerIos = false;
+					});
+				});
+
+				$rootScope.instalarPwa = function() {
+					if (!deferredInstallPrompt) {
+						return;
+					}
+					deferredInstallPrompt.prompt();
+					var p = deferredInstallPrompt.userChoice;
+					deferredInstallPrompt = null;
+					p.then(function() {
+						$rootScope.$apply(function() {
+							$rootScope.pwaBannerChromium = false;
+						});
+					}).catch(function() {
+						$rootScope.$apply(function() {
+							$rootScope.pwaBannerChromium = false;
+						});
+					});
+				};
+
+				$rootScope.dispensarOfertaPwa = function() {
+					try {
+						w.localStorage.setItem(LS_PWA_DISMISS, String(Date.now()));
+					} catch (err) {}
+					$rootScope.pwaBannerChromium = false;
+					$rootScope.pwaBannerIos = false;
+				};
+
+				$timeout(function() {
+					if (deferredInstallPrompt) {
+						return;
+					}
+					if (isStandaloneDisplay() || isDismissedWithinCooldown()) {
+						return;
+					}
+					if (!isLikelySafariOnIos()) {
+						return;
+					}
+					$rootScope.pwaBannerIos = true;
+				}, 2800);
+			}]);
 			app.controller('sorteioCtrl', function($scope, $http, $q) {
 				$scope.regrasVisivel = localStorage.getItem(LS_REGRAS_FECHADAS) !== '1';
 				$scope.fecharRegras = function() {
