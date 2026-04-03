@@ -28,31 +28,35 @@
 		<div ng-show="!carregando && !erroJogos">
 		<div class="mega-app-top">
 		<div class="jumbotron white header" style="background-color:{{cor}}">
-			<div class="container">
-				<h1 class="text-center">Gerador de Sorteios</h1>
-				<h2 class="text-center" ng-bind="jogoNomeMenu">MEGA-SENA</h2>
+			<div class="container mega-header-inner">
+				<div class="mega-header-text">
+					<h1 class="text-center">Gerador de Sorteios</h1>
+					<h2 class="text-center" ng-bind="jogoNomeMenu">MEGA-SENA</h2>
+				</div>
+				<button type="button" class="mega-nav-menu-trigger"
+					ng-click="toggleMenuLoterias()"
+					ng-attr-aria-expanded="{{ navLoteriasMobile ? (menuLoteriasAberto ? 'true' : 'false') : undefined }}"
+					aria-controls="mega-loterias-panel"
+					aria-label="Escolher loteria">
+					<svg class="mega-nav-menu-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+						<path fill="currentColor" d="M4 7h16v1.5H4V7zm0 5.25h16v1.5H4v-1.5zM4 17.5h16V19H4v-1.5z"/>
+					</svg>
+				</button>
 			</div>
 		</div>
 
-		<nav class="mega-nav-loterias" aria-label="Escolha da loteria">
+		<nav class="mega-nav-loterias" aria-label="Escolha da loteria"
+			ng-class="{'mega-nav-loterias--panel-open': navLoteriasMobile && menuLoteriasAberto}">
 			<div class="container">
-				<div class="mega-loterias-compact">
-					<span class="mega-loterias-atual nome-loteria" ng-class="jogoAtual.classeCss" ng-bind="jogoNomeMenu"></span>
-					<button type="button" class="mega-loterias-toggle"
-						ng-click="toggleMenuLoterias()"
-						ng-attr-aria-expanded="{{ menuLoteriasAberto ? 'true' : 'false' }}"
-						aria-controls="mega-loterias-panel">
-						<span class="mega-loterias-toggle-label">Trocar loteria</span>
-						<span class="mega-loterias-toggle-chevron" ng-class="{'is-open': menuLoteriasAberto}" aria-hidden="true"></span>
-					</button>
-				</div>
-				<div id="mega-loterias-panel" class="mega-loterias-panel" ng-show="menuLoteriasAberto">
+				<div id="mega-loterias-panel" class="mega-loterias-panel"
+					ng-show="!navLoteriasMobile || menuLoteriasAberto">
 					<div class="mega-loteria-list">
 						<button type="button" class="mega-loteria-btn"
 							ng-repeat="j in jogos track by j.id"
 							ng-click="selecionarJogo(j)"
 							ng-class="{'is-selected': jogoAtual.id === j.id}"
 							ng-attr-aria-pressed="{{ jogoAtual.id === j.id ? 'true' : 'false' }}"
+							ng-attr-aria-current="{{ jogoAtual.id === j.id ? 'true' : undefined }}"
 							ng-style="jogoAtual.id === j.id ? {'borderColor': j.cor, 'boxShadow': '0 4px 20px rgba(0,0,0,0.08)'} : {}">
 							<span class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></span>
 						</button>
@@ -441,7 +445,7 @@
 					$rootScope.pwaBannerIos = true;
 				}, 2800);
 			}]);
-			app.controller('sorteioCtrl', function($scope, $http, $q, $window) {
+			app.controller('sorteioCtrl', function($scope, $http, $q, $window, $document, $timeout) {
 				$scope.regrasVisivel = localStorage.getItem(LS_REGRAS_FECHADAS) !== '1';
 				$scope.fecharRegras = function() {
 					try {
@@ -449,10 +453,63 @@
 					} catch (e) {}
 					$scope.regrasVisivel = false;
 				};
-				$scope.menuLoteriasAberto = false;
+
+				var mqNavLoterias = $window.matchMedia ? $window.matchMedia('(max-width: 767px)') : { matches: false, addEventListener: null, addListener: null };
+				$scope.navLoteriasMobile = !!mqNavLoterias.matches;
+				$scope.menuLoteriasAberto = !$scope.navLoteriasMobile;
+
+				function onNavLoteriasMqChange() {
+					$scope.$evalAsync(function() {
+						$scope.navLoteriasMobile = !!mqNavLoterias.matches;
+						if ($scope.navLoteriasMobile) {
+							$scope.menuLoteriasAberto = false;
+						} else {
+							$scope.menuLoteriasAberto = true;
+						}
+					});
+				}
+				if (mqNavLoterias.addEventListener) {
+					mqNavLoterias.addEventListener('change', onNavLoteriasMqChange);
+				} else if (mqNavLoterias.addListener) {
+					mqNavLoterias.addListener(onNavLoteriasMqChange);
+				}
+
+				var megaNavEscHandler = function(e) {
+					var isEsc = e.key === 'Escape' || e.keyCode === 27;
+					if (!isEsc || !$scope.navLoteriasMobile || !$scope.menuLoteriasAberto) {
+						return;
+					}
+					$scope.$evalAsync(function() {
+						$scope.menuLoteriasAberto = false;
+					});
+					$timeout(function() {
+						var trigger = $window.document.querySelector('.mega-nav-menu-trigger');
+						if (trigger && trigger.focus) {
+							trigger.focus();
+						}
+					}, 0);
+				};
+				$document.on('keydown', megaNavEscHandler);
+				$scope.$on('$destroy', function() {
+					$document.off('keydown', megaNavEscHandler);
+					if (mqNavLoterias.removeEventListener) {
+						mqNavLoterias.removeEventListener('change', onNavLoteriasMqChange);
+					} else if (mqNavLoterias.removeListener) {
+						mqNavLoterias.removeListener(onNavLoteriasMqChange);
+					}
+				});
+
 				$scope.footerSobreAberto = false;
 				$scope.toggleMenuLoterias = function() {
 					$scope.menuLoteriasAberto = !$scope.menuLoteriasAberto;
+					if ($scope.navLoteriasMobile && $scope.menuLoteriasAberto) {
+						$timeout(function() {
+							var first = $window.document.querySelector('.mega-loteria-list .mega-loteria-btn');
+							if (first && first.focus) {
+								first.focus();
+							}
+						}, 0);
+					}
 				};
 				$scope.carregando = true;
 				$scope.erroJogos = null;
@@ -497,7 +554,9 @@
 
 				$scope.selecionarJogo = function(j) {
 					aplicarConfig(j);
-					$scope.menuLoteriasAberto = false;
+					if ($scope.navLoteriasMobile) {
+						$scope.menuLoteriasAberto = false;
+					}
 					$scope.sortear($scope.min, $scope.max, $scope.apostaQtd);
 				};
 

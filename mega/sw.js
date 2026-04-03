@@ -1,5 +1,5 @@
 /* Super Mega — service worker (cache de shell + dados locais) */
-var CACHE_NAME = 'mega-pwa-v8';
+var CACHE_NAME = 'mega-pwa-v9';
 var BOOTSTRAP_CSS =
 	'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
 
