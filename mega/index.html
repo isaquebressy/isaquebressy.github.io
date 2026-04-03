@@ -27,7 +27,6 @@
 
 		<nav class="mega-nav-loterias" aria-label="Escolha da loteria">
 			<div class="container">
-				<p class="mega-section-eyebrow">Escolha a loteria</p>
 				<div class="mega-loteria-list">
 					<button type="button" class="mega-loteria-btn"
 						ng-repeat="j in jogos track by j.id"
@@ -36,14 +35,14 @@
 						ng-attr-aria-pressed="{{ jogoAtual.id === j.id ? 'true' : 'false' }}"
 						ng-style="jogoAtual.id === j.id ? {'borderColor': j.cor, 'boxShadow': '0 4px 20px rgba(0,0,0,0.08)'} : {}">
 						<span class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></span>
-						<span class="mega-loteria-check" ng-if="jogoAtual.id === j.id">Selecionada</span>
 					</button>
 				</div>
 			</div>
 		</nav>
 
-		<div class="container regras-jogo">
-			<div class="well">
+		<div class="container regras-jogo" ng-show="regrasVisivel">
+			<div class="well regras-jogo-well">
+				<button type="button" class="regras-fechar" ng-click="fecharRegras()" aria-label="Fechar regras da modalidade">×</button>
 				<h4>Regras da modalidade (Loterias CAIXA)</h4>
 				<p><strong>Sorteio:</strong> <span ng-bind="sorteioQtd"></span> números sorteados no globo, entre <span ng-bind="min"></span> e <span ng-bind="max"></span>.</p>
 				<p><strong>Aposta simples no volante:</strong> escolha de <strong ng-bind="apostaMin"></strong> a <strong ng-bind="apostaMax"></strong> números.</p>
@@ -85,16 +84,6 @@
 				</div>
 				<div class="col-sm-3 col-md-4"></div>
 			</div>
-
-			<div class="row">
-				<div class="col-xs-3"></div>
-				<div class="col-xs-6 share">
-					  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fisaque.bressy.com.br%2Fmega&t=Gerador%20de%20Sorteios%20da%20Mega-Sena" title="Share on Facebook" target="_blank"><img src="img/social/Facebook.png"></a>
-					  <a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fisaque.bressy.com.br%2Fmega&text=Gerador%20de%20Sorteios%20da%20Mega-Sena:%20http%3A%2F%2Fisaque.bressy.com.br%2Fmega&via=isaquebressy" target="_blank" title="Tweet"><img src="img/social/Twitter.png"></a>
-					  <a href="https://plus.google.com/share?url=http%3A%2F%2Fisaque.bressy.com.br%2Fmega" target="_blank" title="Share on Google+"><img src="img/social/Google+.png"></a>
-				</div>
-				<div class="col-xs-3"></div>
-			</div>
 		</div>
 		<div class="jumbotron footer white">
 			<div class="container">
@@ -129,9 +118,17 @@
 		<script>
 			var GAMES_BASE = 'data/games/';
 			var MAX_SORTEIOS = 20;
+			var LS_REGRAS_FECHADAS = 'mega-regras-dismissed';
 
 			var app = angular.module('myApp', []);
 			app.controller('sorteioCtrl', function($scope, $http, $q) {
+				$scope.regrasVisivel = localStorage.getItem(LS_REGRAS_FECHADAS) !== '1';
+				$scope.fecharRegras = function() {
+					try {
+						localStorage.setItem(LS_REGRAS_FECHADAS, '1');
+					} catch (e) {}
+					$scope.regrasVisivel = false;
+				};
 				$scope.carregando = true;
 				$scope.erroJogos = null;
 				$scope.jogos = [];
