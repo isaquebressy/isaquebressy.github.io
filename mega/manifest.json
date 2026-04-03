@@ -1,0 +1,32 @@
+{
+	"name": "Super Mega — Gerador de Sorteios",
+	"short_name": "Super Mega",
+	"description": "Gere números aleatórios para Mega-Sena, Lotofácil, Quina e Lotomania.",
+	"start_url": "./",
+	"scope": "./",
+	"display": "standalone",
+	"orientation": "portrait-primary",
+	"background_color": "#ffffff",
+	"theme_color": "#1abc9c",
+	"lang": "pt-BR",
+	"icons": [
+		{
+			"src": "img/pwa/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "img/pwa/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "img/pwa/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	]
+}
