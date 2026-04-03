@@ -458,6 +458,53 @@ a:focus {
 	}
 }
 
+.mega-control-field--cobertura {
+	max-width: 720px;
+	margin: 4px auto 0;
+	width: 100%;
+}
+
+.mega-control-checkbox-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+}
+
+.mega-control-checkbox {
+	width: 22px;
+	height: 22px;
+	min-width: 22px;
+	margin: 2px 0 0;
+	flex-shrink: 0;
+	accent-color: var(--mega-accent);
+	cursor: pointer;
+}
+
+.mega-control-checkbox-label {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--mega-text);
+	line-height: 1.35;
+	cursor: pointer;
+	margin: 0;
+	padding-top: 1px;
+}
+
+.mega-control-help {
+	margin: 10px 0 0;
+	padding-left: 34px;
+	font-size: 0.8125rem;
+	line-height: 1.45;
+	color: var(--mega-muted);
+}
+
+@media (max-width: 599px) {
+	.mega-control-help {
+		padding-left: 0;
+	}
+}
+
 /* ——— Área das bolas / jogos ——— */
 .balls {
 	padding-bottom: 24px;

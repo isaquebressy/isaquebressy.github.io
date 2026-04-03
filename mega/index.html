@@ -86,6 +86,18 @@
 						<select id="qtdAposta" class="mega-control-select" ng-model="apostaQtd" ng-options="n for n in apostaOpcoes" ng-change="sortearAposta()"></select>
 					</div>
 				</div>
+				<div class="mega-control-field mega-control-field--cobertura"
+					ng-show="qtdSorteios > 1 && premioAcertosMin >= 1 && premioAcertosMin < apostaQtd && tipoTextoPremio !== 'lotomania'">
+					<div class="mega-control-checkbox-row">
+						<input type="checkbox" class="mega-control-checkbox" id="modoCoberturaPremioMin"
+							ng-model="modoCoberturaPremioMin" ng-change="sortearAtual()"
+							aria-describedby="mega-cobertura-help" />
+						<label class="mega-control-checkbox-label" for="modoCoberturaPremioMin">Otimizar cobertura do prêmio mínimo</label>
+					</div>
+					<p class="mega-control-help" id="mega-cobertura-help">
+						Varia as combinações de <span ng-bind="premioAcertosMin"></span> acertos entre os jogos gerados (pool maior que a aposta). Não altera a probabilidade do sorteio oficial.
+					</p>
+				</div>
 			</div>
 
 			<div class="mega-sorteios-stack">
@@ -182,6 +194,140 @@
 				if (meta && hex) {
 					meta.setAttribute('content', hex);
 				}
+			}
+
+			var MEGA_ENUM_COMBS_MAX = 8000;
+			var MEGA_COBERTURA_TRIALS = 60;
+
+			function megaBinomial(n, r) {
+				if (r < 0 || r > n) {
+					return 0;
+				}
+				if (r === 0 || r === n) {
+					return 1;
+				}
+				r = Math.min(r, n - r);
+				var c = 1;
+				for (var i = 0; i < r; i++) {
+					c = (c * (n - i)) / (i + 1);
+				}
+				return Math.round(c);
+			}
+
+			function megaCombinationsBuild(arr, r, out, start, prefix) {
+				if (r === 0) {
+					out.push(prefix.slice());
+					return;
+				}
+				for (var i = start; i <= arr.length - r; i++) {
+					prefix.push(arr[i]);
+					megaCombinationsBuild(arr, r - 1, out, i + 1, prefix);
+					prefix.pop();
+				}
+			}
+
+			function megaCombinations(arr, r) {
+				var out = [];
+				if (!arr || r <= 0 || r > arr.length) {
+					return out;
+				}
+				megaCombinationsBuild(arr, r, out, 0, []);
+				return out;
+			}
+
+			function megaTicketKey(ticket) {
+				return ticket.join('-');
+			}
+
+			function megaCountDistinctKSubsetsCovered(tickets, k) {
+				var seen = {};
+				for (var t = 0; t < tickets.length; t++) {
+					var ticket = tickets[t];
+					if (!ticket || ticket.length < k) {
+						continue;
+					}
+					var sorted = ticket.slice().sort(function(a, b) {
+						return a - b;
+					});
+					var combs = megaCombinations(sorted, k);
+					for (var c = 0; c < combs.length; c++) {
+						seen[combs[c].join('-')] = true;
+					}
+				}
+				var n = 0;
+				for (var key in seen) {
+					if (Object.prototype.hasOwnProperty.call(seen, key)) {
+						n++;
+					}
+				}
+				return n;
+			}
+
+			function megaSortearCoberturaHeuristic(pool, num, n, k) {
+				var best = null;
+				var bestScore = -1;
+				for (var tr = 0; tr < MEGA_COBERTURA_TRIALS; tr++) {
+					var tickets = [];
+					var usedKeys = {};
+					for (var s = 0; s < n; s++) {
+						var ticket = null;
+						var tk = '';
+						for (var att = 0; att < 120; att++) {
+							var cop = pool.slice();
+							ticket = shuffle(cop).slice(0, num).sort(function(a, b) {
+								return a - b;
+							});
+							tk = megaTicketKey(ticket);
+							if (!usedKeys[tk]) {
+								break;
+							}
+						}
+						usedKeys[tk] = true;
+						tickets.push(ticket);
+					}
+					var score = megaCountDistinctKSubsetsCovered(tickets, k);
+					if (score > bestScore) {
+						bestScore = score;
+						best = tickets;
+					}
+				}
+				return best;
+			}
+
+			function megaSortearComCobertura(globe, min, max, num, n, k) {
+				var U = max - min + 1;
+				var bonus = Math.min(n + k - 1, U - num, 12);
+				var P = Math.min(U, num + bonus);
+				if (P <= num) {
+					return null;
+				}
+				var shuffled = shuffle(globe.slice());
+				var pool = shuffled.slice(0, P).sort(function(a, b) {
+					return a - b;
+				});
+				var totalCombs = megaBinomial(P, num);
+				if (totalCombs <= MEGA_ENUM_COMBS_MAX) {
+					var all = megaCombinations(pool, num);
+					shuffle(all);
+					var blocos = [];
+					var used = {};
+					for (var i = 0; i < all.length && blocos.length < n; i++) {
+						var key = megaTicketKey(all[i]);
+						if (!used[key]) {
+							used[key] = true;
+							blocos.push(all[i].slice());
+						}
+					}
+					while (blocos.length < n) {
+						var copia = shuffle(globe.slice());
+						blocos.push(copia.slice(0, num).sort(function(a, b) {
+							return a - b;
+						}));
+					}
+					return blocos;
+				}
+				var heur = megaSortearCoberturaHeuristic(pool, num, n, k);
+				return heur && heur.length === n ? heur : null;
 			}
 
 			var app = angular.module('myApp', []);
@@ -319,10 +465,14 @@
 					$scope.qtdSorteiosOpcoes.push(qi);
 				}
 				$scope.qtdSorteios = 1;
+				$scope.modoCoberturaPremioMin = false;
 
 				function aplicarConfig(j) {
 					if (!j) {
 						return;
+					}
+					if (j.tipoTextoPremio === 'lotomania' || !(j.premioAcertosMin >= 1)) {
+						$scope.modoCoberturaPremioMin = false;
 					}
 					$scope.jogoAtual = j;
 					$scope.jogoNomeMenu = j.nomeMenu;
@@ -405,6 +555,24 @@
 					for (var i = min; i <= max; i++) {
 						globe.push(i);
 					}
+
+					var kPrem = parseInt($scope.premioAcertosMin, 10);
+					var usarCobertura =
+						$scope.modoCoberturaPremioMin &&
+						qSort > 1 &&
+						!isNaN(kPrem) &&
+						kPrem >= 1 &&
+						kPrem < num &&
+						$scope.tipoTextoPremio !== 'lotomania';
+
+					if (usarCobertura) {
+						var blocosCob = megaSortearComCobertura(globe, min, max, num, qSort, kPrem);
+						if (blocosCob && blocosCob.length === qSort) {
+							$scope.blocosSorteio = blocosCob;
+							return;
+						}
+					}
+
 					var blocos = [];
 					for (var s = 0; s < qSort; s++) {
 						var copia = globe.slice();
