@@ -26,6 +26,7 @@
 
 html {
 	font-size: 100%;
+	overscroll-behavior-y: contain;
 }
 
 body {
@@ -36,6 +37,11 @@ body {
 	background: var(--mega-bg);
 	-webkit-font-smoothing: antialiased;
 	margin: 0;
+	touch-action: manipulation;
+}
+
+body.mega-body--standalone {
+	overscroll-behavior-y: none;
 }
 
 body.mega-body--pwa-banner {
@@ -98,11 +104,104 @@ a:focus {
 	color: #fff;
 }
 
+/* ——— Topo fixo (app) ——— */
+.mega-app-top {
+	position: sticky;
+	top: 0;
+	z-index: 1020;
+}
+
+.mega-app-top .header.jumbotron {
+	padding-top: calc(30px + env(safe-area-inset-top, 0px));
+	margin-bottom: 0;
+}
+
 /* ——— Navegação de loterias ——— */
 .mega-nav-loterias {
 	background: var(--mega-bg-soft);
-	padding: 16px 0 18px;
+	padding: 12px 0 14px;
 	border-bottom: 1px solid var(--mega-border);
+}
+
+.mega-loterias-compact {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.mega-loterias-atual {
+	flex: 1 1 auto;
+	min-width: 0;
+	margin: 0;
+	font-weight: 700;
+	font-size: 1rem;
+	line-height: 1.3;
+}
+
+.mega-loterias-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: var(--mega-touch-min);
+	padding: 8px 14px;
+	margin: 0;
+	border: 2px solid var(--mega-border);
+	border-radius: var(--mega-radius-pill);
+	background: #fff;
+	box-shadow: var(--mega-shadow);
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--mega-text);
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mega-loterias-toggle:hover,
+.mega-loterias-toggle:focus {
+	box-shadow: var(--mega-shadow-hover);
+	outline: none;
+}
+
+.mega-loterias-toggle:focus-visible {
+	outline: 2px solid var(--mega-accent);
+	outline-offset: 2px;
+}
+
+.mega-loterias-toggle-chevron {
+	display: inline-block;
+	width: 0.5em;
+	height: 0.5em;
+	border-right: 2px solid var(--mega-muted);
+	border-bottom: 2px solid var(--mega-muted);
+	transform: rotate(45deg);
+	margin-top: -0.25em;
+	transition: transform 0.2s ease;
+}
+
+.mega-loterias-toggle-chevron.is-open {
+	transform: rotate(-135deg);
+	margin-top: 0.15em;
+}
+
+.mega-loterias-panel {
+	padding-top: 14px;
+	margin-top: 4px;
+	border-top: 1px solid var(--mega-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.mega-body--pwa-banner {
+		transition: none;
+	}
+
+	.mega-loterias-toggle,
+	.mega-loterias-toggle-chevron {
+		transition: none;
+	}
 }
 
 .mega-loteria-list {
@@ -533,6 +632,42 @@ a:focus {
 .balls ul.row li {
 	margin: 0;
 	padding: 0;
+}
+
+.mega-footer-standalone-bar {
+	padding: 10px 15px;
+	text-align: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mega-footer-sobre-toggle {
+	min-height: var(--mega-touch-min);
+	padding: 10px 20px;
+	margin: 0;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: var(--mega-radius-pill);
+	background: transparent;
+	color: #fff;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.mega-footer-sobre-toggle:hover,
+.mega-footer-sobre-toggle:focus {
+	background: rgba(255, 255, 255, 0.08);
+	outline: none;
+}
+
+.mega-footer-sobre-toggle:focus-visible {
+	outline: 2px solid var(--mega-accent);
+	outline-offset: 2px;
+}
+
+body.mega-body--standalone .footer {
+	margin-top: 32px;
 }
 
 .footer {

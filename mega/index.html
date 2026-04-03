@@ -3,12 +3,12 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 		<meta name="description" content="Super Mega - Sistema de greação de números aleatórios para sorteios das principais loterias brasileiras: Mega-sena, Lotofácil, Quina e Lotomania." />
-		<meta name="theme-color" content="#1abc9c" />
+		<meta id="mega-theme-color" name="theme-color" content="#1abc9c" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-title" content="Super Mega" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<link rel="manifest" href="manifest.json" />
 		<link rel="icon" type="image/png" sizes="192x192" href="img/pwa/icon-192.png" />
 		<link rel="apple-touch-icon" href="img/pwa/icon-192.png" />
@@ -20,12 +20,13 @@
 		<title>Super Mega - Gerador de números para sorteios da MEGA-SENA, LOTOFÁCIL, QUINA e LOTOMANIA</title>
 	</head>
 	<body ng-app="myApp" ng-controller="sorteioCtrl"
-		ng-class="{'mega-body--pwa-banner': pwaBannerChromium || pwaBannerIos}">
+		ng-class="{'mega-body--pwa-banner': pwaBannerChromium || pwaBannerIos, 'mega-body--standalone': megaBodyStandalone}">
 
 		<p class="container text-center mega-loading" ng-show="carregando">Carregando jogos…</p>
 		<p class="container alert alert-danger mega-erro" ng-show="erroJogos" ng-bind="erroJogos"></p>
 
 		<div ng-show="!carregando && !erroJogos">
+		<div class="mega-app-top">
 		<div class="jumbotron white header" style="background-color:{{cor}}">
 			<div class="container">
 				<h1 class="text-center">Gerador de Sorteios</h1>
@@ -35,18 +36,31 @@
 
 		<nav class="mega-nav-loterias" aria-label="Escolha da loteria">
 			<div class="container">
-				<div class="mega-loteria-list">
-					<button type="button" class="mega-loteria-btn"
-						ng-repeat="j in jogos track by j.id"
-						ng-click="selecionarJogo(j)"
-						ng-class="{'is-selected': jogoAtual.id === j.id}"
-						ng-attr-aria-pressed="{{ jogoAtual.id === j.id ? 'true' : 'false' }}"
-						ng-style="jogoAtual.id === j.id ? {'borderColor': j.cor, 'boxShadow': '0 4px 20px rgba(0,0,0,0.08)'} : {}">
-						<span class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></span>
+				<div class="mega-loterias-compact">
+					<span class="mega-loterias-atual nome-loteria" ng-class="jogoAtual.classeCss" ng-bind="jogoNomeMenu"></span>
+					<button type="button" class="mega-loterias-toggle"
+						ng-click="toggleMenuLoterias()"
+						ng-attr-aria-expanded="{{ menuLoteriasAberto ? 'true' : 'false' }}"
+						aria-controls="mega-loterias-panel">
+						<span class="mega-loterias-toggle-label">Trocar loteria</span>
+						<span class="mega-loterias-toggle-chevron" ng-class="{'is-open': menuLoteriasAberto}" aria-hidden="true"></span>
 					</button>
+				</div>
+				<div id="mega-loterias-panel" class="mega-loterias-panel" ng-show="menuLoteriasAberto">
+					<div class="mega-loteria-list">
+						<button type="button" class="mega-loteria-btn"
+							ng-repeat="j in jogos track by j.id"
+							ng-click="selecionarJogo(j)"
+							ng-class="{'is-selected': jogoAtual.id === j.id}"
+							ng-attr-aria-pressed="{{ jogoAtual.id === j.id ? 'true' : 'false' }}"
+							ng-style="jogoAtual.id === j.id ? {'borderColor': j.cor, 'boxShadow': '0 4px 20px rgba(0,0,0,0.08)'} : {}">
+							<span class="nome-loteria" ng-class="j.classeCss" ng-bind="j.nomeMenu"></span>
+						</button>
+					</div>
 				</div>
 			</div>
 		</nav>
+		</div>
 
 		<div class="container regras-jogo" ng-show="regrasVisivel">
 			<div class="well regras-jogo-well">
@@ -88,13 +102,21 @@
 			<div class="row row-button">
 				<div class="col-sm-3 col-md-4"></div>
 				<div class="col-sm-6 col-md-4">
-					<button type="button" ng-click="sortearAtual()" class="btn btn-lg btn-block text-uppercase mega-btn-gerar" ng-style="{ 'background-color': cor, 'color': '#fff' }">Gerar números</button>
+					<button type="button" ng-click="gerarComFeedback()" class="btn btn-lg btn-block text-uppercase mega-btn-gerar" ng-style="{ 'background-color': cor, 'color': '#fff' }">Gerar números</button>
 				</div>
 				<div class="col-sm-3 col-md-4"></div>
 			</div>
 		</div>
 		<div class="jumbotron footer white">
-			<div class="container">
+			<div class="mega-footer-standalone-bar" ng-if="megaBodyStandalone">
+				<button type="button" class="mega-footer-sobre-toggle"
+					ng-click="footerSobreAberto = !footerSobreAberto"
+					ng-attr-aria-expanded="{{ footerSobreAberto ? 'true' : 'false' }}"
+					aria-controls="mega-footer-sobre-conteudo">
+					Sobre o site
+				</button>
+			</div>
+			<div id="mega-footer-sobre-conteudo" class="container" ng-hide="megaBodyStandalone && !footerSobreAberto">
 				<div class="row">
 					<div class="col-md-9">
 						<h3>Sobre o site</h3>
@@ -155,6 +177,13 @@
 			var LS_PWA_DISMISS = 'mega-pwa-install-dismissed';
 			var PWA_DISMISS_COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000;
 
+			function megaSetThemeColor(hex) {
+				var meta = document.getElementById('mega-theme-color');
+				if (meta && hex) {
+					meta.setAttribute('content', hex);
+				}
+			}
+
 			var app = angular.module('myApp', []);
 			app.run(['$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
 				var deferredInstallPrompt = null;
@@ -168,6 +197,13 @@
 					} catch (e) {}
 					return w.navigator.standalone === true;
 				}
+
+				$rootScope.megaBodyStandalone = isStandaloneDisplay();
+				try {
+					if ($rootScope.megaBodyStandalone && w.screen && w.screen.orientation && w.screen.orientation.lock) {
+						w.screen.orientation.lock('portrait-primary').catch(function () {});
+					}
+				} catch (e) {}
 
 				function isDismissedWithinCooldown() {
 					try {
@@ -259,13 +295,18 @@
 					$rootScope.pwaBannerIos = true;
 				}, 2800);
 			}]);
-			app.controller('sorteioCtrl', function($scope, $http, $q) {
+			app.controller('sorteioCtrl', function($scope, $http, $q, $window) {
 				$scope.regrasVisivel = localStorage.getItem(LS_REGRAS_FECHADAS) !== '1';
 				$scope.fecharRegras = function() {
 					try {
 						localStorage.setItem(LS_REGRAS_FECHADAS, '1');
 					} catch (e) {}
 					$scope.regrasVisivel = false;
+				};
+				$scope.menuLoteriasAberto = false;
+				$scope.footerSobreAberto = false;
+				$scope.toggleMenuLoterias = function() {
+					$scope.menuLoteriasAberto = !$scope.menuLoteriasAberto;
 				};
 				$scope.carregando = true;
 				$scope.erroJogos = null;
@@ -286,6 +327,7 @@
 					$scope.jogoAtual = j;
 					$scope.jogoNomeMenu = j.nomeMenu;
 					$scope.cor = j.cor;
+					megaSetThemeColor(j.cor);
 					$scope.min = j.min;
 					$scope.max = j.max;
 					$scope.sorteioQtd = j.sorteioQtd;
@@ -305,11 +347,21 @@
 
 				$scope.selecionarJogo = function(j) {
 					aplicarConfig(j);
+					$scope.menuLoteriasAberto = false;
 					$scope.sortear($scope.min, $scope.max, $scope.apostaQtd);
 				};
 
 				$scope.sortearAtual = function() {
 					$scope.sortear($scope.min, $scope.max, $scope.apostaQtd);
+				};
+
+				$scope.gerarComFeedback = function() {
+					try {
+						if ($window.navigator.vibrate) {
+							$window.navigator.vibrate(10);
+						}
+					} catch (e) {}
+					$scope.sortearAtual();
 				};
 
 				$scope.formatBola = function(b) {
