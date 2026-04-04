@@ -8,20 +8,25 @@
 		<meta id="mega-theme-color" name="theme-color" content="#1abc9c" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-title" content="Super Mega" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 		<link rel="manifest" href="manifest.json" />
 		<link rel="icon" type="image/png" sizes="192x192" href="img/pwa/icon-192.png" />
 		<link rel="apple-touch-icon" href="img/pwa/icon-192.png" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;display=swap" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="style.css" />
 
-		<script src="js/angular.min.js"></script>
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<title>Super Mega - Gerador de números para sorteios da MEGA-SENA, LOTOFÁCIL, QUINA e LOTOMANIA</title>
 	</head>
 	<body ng-app="myApp" ng-controller="sorteioCtrl"
 		ng-class="{'mega-body--pwa-banner': pwaBannerChromium || pwaBannerIos, 'mega-body--standalone': megaBodyStandalone}">
 
+		<div id="mega-static-boot" class="mega-boot-splash" role="status" aria-live="polite">Carregando Super Mega…</div>
+
+		<div class="mega-ng-cloak-root" ng-cloak>
 		<p class="container text-center mega-loading" ng-show="carregando">Carregando jogos…</p>
 		<p class="container alert alert-danger mega-erro" ng-show="erroJogos" ng-bind="erroJogos"></p>
 
@@ -177,6 +182,7 @@
 			</div>
 		</div>
 		</div>
+		</div>
 
 		<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 		<script>
@@ -186,6 +192,7 @@
 				});
 			}
 		</script>
+		<script src="js/angular.min.js"></script>
 		<script>
 			var GAMES_BASE = 'data/games/';
 			var MAX_SORTEIOS = 20;
@@ -335,6 +342,15 @@
 			}
 
 			var app = angular.module('myApp', []);
+			app.run(['$window', '$timeout', function($window, $timeout) {
+				$timeout(function() {
+					var el = $window.document.getElementById('mega-static-boot');
+					if (el) {
+						el.hidden = true;
+						el.setAttribute('aria-hidden', 'true');
+					}
+				}, 0);
+			}]);
 			app.run(['$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
 				var deferredInstallPrompt = null;
 				var w = $window;
@@ -643,21 +659,48 @@
 					$scope.blocosSorteio = blocos;
 				};
 
-				$http.get(GAMES_BASE + 'index.json').then(function(res) {
-					var files = res.data.games;
-					if (!angular.isArray(files) || files.length === 0) {
-						return $q.reject('Lista "games" vazia ou inválida em index.json.');
-					}
-					return $q.all(files.map(function(file) {
-						return $http.get(GAMES_BASE + file).then(function(r) {
-							return r.data;
-						});
-					}));
-				}).then(function(jogos) {
+				function megaValidarJogos(jogos) {
 					for (var i = 0; i < jogos.length; i++) {
 						if (!jogos[i].id || !jogos[i].nomeMenu) {
-							return $q.reject('Cada jogo precisa de "id" e "nomeMenu" no JSON.');
+							return 'Cada jogo precisa de "id" e "nomeMenu" no JSON.';
 						}
+					}
+					return null;
+				}
+
+				function megaCarregarJogosViaIndex() {
+					return $http.get(GAMES_BASE + 'index.json').then(function(res) {
+						var files = res.data.games;
+						if (!angular.isArray(files) || files.length === 0) {
+							return $q.reject('Lista "games" vazia ou inválida em index.json.');
+						}
+						return $q.all(files.map(function(file) {
+							return $http.get(GAMES_BASE + file).then(function(r) {
+								return r.data;
+							});
+						}));
+					});
+				}
+
+				$http.get(GAMES_BASE + 'all.json')
+					.then(function(res) {
+						var jogos = res.data && res.data.games;
+						if (!angular.isArray(jogos) || jogos.length === 0) {
+							return $q.reject('Bundle all.json inválido.');
+						}
+						var v = megaValidarJogos(jogos);
+						if (v) {
+							return $q.reject(v);
+						}
+						return jogos;
+					})
+					.catch(function() {
+						return megaCarregarJogosViaIndex();
+					})
+					.then(function(jogos) {
+					var v = megaValidarJogos(jogos);
+					if (v) {
+						return $q.reject(v);
 					}
 					$scope.jogos = jogos;
 					$scope.selecionarJogo(jogos[0]);

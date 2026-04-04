@@ -1,9 +1,9 @@
 /* Super Mega — service worker (cache de shell + dados locais) */
-var CACHE_NAME = 'mega-pwa-v9';
+var CACHE_NAME = 'mega-pwa-v10';
 var BOOTSTRAP_CSS =
 	'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
 
-var PRECACHE_URLS = [
+var PRECACHE_LOCAL_URLS = [
 	'./',
 	'./index.html',
 	'./style.css',
@@ -13,20 +13,26 @@ var PRECACHE_URLS = [
 	'./img/pwa/icon-192.png',
 	'./img/pwa/icon-512.png',
 	'./data/games/index.json',
+	'./data/games/all.json',
 	'./data/games/mega-sena.json',
 	'./data/games/lotofacil.json',
 	'./data/games/quina.json',
-	'./data/games/lotomania.json',
-	BOOTSTRAP_CSS
+	'./data/games/lotomania.json'
 ];
+
+function precacheLocalParallel(cache) {
+	return Promise.all(
+		PRECACHE_LOCAL_URLS.map(function (url) {
+			return cache.add(url).catch(function () {});
+		})
+	);
+}
 
 function precache() {
 	return caches.open(CACHE_NAME).then(function (cache) {
-		return PRECACHE_URLS.reduce(function (chain, url) {
-			return chain.then(function () {
-				return cache.add(url).catch(function () {});
-			});
-		}, Promise.resolve());
+		return precacheLocalParallel(cache).then(function () {
+			return cache.add(BOOTSTRAP_CSS).catch(function () {});
+		});
 	});
 }
 

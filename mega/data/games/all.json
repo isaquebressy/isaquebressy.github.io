@@ -1,0 +1,64 @@
+{
+  "games": [
+    {
+      "id": "mega-sena",
+      "nomeMenu": "MEGA-SENA",
+      "classeCss": "mega",
+      "cor": "#209869",
+      "min": 1,
+      "max": 60,
+      "sorteioQtd": 6,
+      "apostaMin": 6,
+      "apostaMax": 20,
+      "premioAcertosMin": 4,
+      "premioAcertosMax": 6,
+      "tipoTextoPremio": "faixa",
+      "formatoBolas": "padrao"
+    },
+    {
+      "id": "lotofacil",
+      "nomeMenu": "LOTOFÁCIL",
+      "classeCss": "loto",
+      "cor": "#930089",
+      "min": 1,
+      "max": 25,
+      "sorteioQtd": 15,
+      "apostaMin": 15,
+      "apostaMax": 20,
+      "premioAcertosMin": 11,
+      "premioAcertosMax": 15,
+      "tipoTextoPremio": "faixa",
+      "formatoBolas": "padrao"
+    },
+    {
+      "id": "quina",
+      "nomeMenu": "QUINA",
+      "classeCss": "quina",
+      "cor": "#260085",
+      "min": 1,
+      "max": 80,
+      "sorteioQtd": 5,
+      "apostaMin": 5,
+      "apostaMax": 15,
+      "premioAcertosMin": 2,
+      "premioAcertosMax": 5,
+      "tipoTextoPremio": "faixa",
+      "formatoBolas": "padrao"
+    },
+    {
+      "id": "lotomania",
+      "nomeMenu": "LOTOMANIA",
+      "classeCss": "mania",
+      "cor": "#f78100",
+      "min": 1,
+      "max": 100,
+      "sorteioQtd": 20,
+      "apostaMin": 50,
+      "apostaMax": 50,
+      "premioAcertosMin": 0,
+      "premioAcertosMax": 20,
+      "tipoTextoPremio": "lotomania",
+      "formatoBolas": "lotomania"
+    }
+  ]
+}

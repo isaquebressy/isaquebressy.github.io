@@ -14,4 +14,6 @@ Como adicionar um jogo
 
 3. Edite index.json e acrescente o nome do arquivo no array "games", na ordem do menu.
 
-Obs.: em hospedagem estática (GitHub Pages) não dá para “listar” arquivos da pasta; por isso o index.json é necessário.
+4. Atualize all.json: copie o objeto completo do novo jogo para o array "games" em all.json (mesma ordem que index.json). O app tenta carregar all.json primeiro (uma única requisição); se falhar, usa index.json + cada arquivo .json.
+
+Obs.: em hospedagem estática (GitHub Pages) não dá para “listar” arquivos da pasta; por isso o index.json é necessário como fallback.
