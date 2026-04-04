@@ -99,13 +99,9 @@
 					ng-show="qtdSorteios > 1 && premioAcertosMin >= 1 && premioAcertosMin < apostaQtd && tipoTextoPremio !== 'lotomania'">
 					<div class="mega-control-checkbox-row">
 						<input type="checkbox" class="mega-control-checkbox" id="modoCoberturaPremioMin"
-							ng-model="modoCoberturaPremioMin" ng-change="sortearAtual()"
-							aria-describedby="mega-cobertura-help" />
-						<label class="mega-control-checkbox-label" for="modoCoberturaPremioMin">Otimizar cobertura do prêmio mínimo</label>
+							ng-model="modoCoberturaPremioMin" ng-change="sortearAtual()" />
+						<label class="mega-control-checkbox-label" for="modoCoberturaPremioMin">otimizar prêmio mínimo</label>
 					</div>
-					<p class="mega-control-help" id="mega-cobertura-help">
-						Varia as combinações de <span ng-bind="premioAcertosMin"></span> acertos entre os jogos gerados (pool maior que a aposta). Não altera a probabilidade do sorteio oficial.
-					</p>
 				</div>
 			</div>
 
