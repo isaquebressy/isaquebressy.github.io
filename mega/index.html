@@ -30,7 +30,8 @@
 		<p class="container text-center mega-loading" ng-show="carregando">Carregando jogos…</p>
 		<p class="container alert alert-danger mega-erro" ng-show="erroJogos" ng-bind="erroJogos"></p>
 
-		<div ng-show="!carregando && !erroJogos">
+		<div class="mega-page-shell" ng-show="!carregando && !erroJogos">
+		<div class="mega-page-main">
 		<div class="mega-app-top">
 		<div class="jumbotron white header" style="background-color:{{cor}}">
 			<div class="container mega-header-inner">
@@ -123,6 +124,7 @@
 				</div>
 				<div class="col-sm-3 col-md-4"></div>
 			</div>
+		</div>
 		</div>
 		<div class="jumbotron footer white">
 			<div class="mega-footer-standalone-bar" ng-if="megaBodyStandalone">
