@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FF6B35"/>
+
+  <!-- Ocean waves at bottom -->
+  <path d="M0 400 Q 64 380 128 400 T 256 400 T 384 400 T 512 400 L 512 512 L 0 512 Z" fill="#004E89" opacity="0.3"/>
+  <path d="M0 420 Q 64 410 128 420 T 256 420 T 384 420 T 512 420 L 512 512 L 0 512 Z" fill="#004E89" opacity="0.5"/>
+
+  <!-- Jolly Roger Skull -->
+  <g transform="translate(256, 180)">
+    <!-- Skull -->
+    <circle cx="0" cy="0" r="60" fill="#FFFFFF" stroke="#2C3E50" stroke-width="3"/>
+
+    <!-- Eye sockets -->
+    <circle cx="-25" cy="-15" r="12" fill="#2C3E50"/>
+    <circle cx="25" cy="-15" r="12" fill="#2C3E50"/>
+
+    <!-- Nose -->
+    <path d="M -8 8 L 8 8 L 0 20 Z" fill="#2C3E50"/>
+
+    <!-- Teeth -->
+    <line x1="-40" y1="30" x2="40" y2="30" stroke="#2C3E50" stroke-width="2"/>
+    <line x1="-35" y1="30" x2="-35" y2="38" stroke="#2C3E50" stroke-width="1"/>
+    <line x1="-20" y1="30" x2="-20" y2="38" stroke="#2C3E50" stroke-width="1"/>
+    <line x1="-5" y1="30" x2="-5" y2="38" stroke="#2C3E50" stroke-width="1"/>
+    <line x1="10" y1="30" x2="10" y2="38" stroke="#2C3E50" stroke-width="1"/>
+    <line x1="25" y1="30" x2="25" y2="38" stroke="#2C3E50" stroke-width="1"/>
+    <line x1="40" y1="30" x2="40" y2="38" stroke="#2C3E50" stroke-width="1"/>
+
+    <!-- Jaw -->
+    <path d="M -50 30 Q 0 60 50 30" fill="none" stroke="#2C3E50" stroke-width="3"/>
+  </g>
+
+  <!-- Crossed swords behind skull -->
+  <g transform="translate(256, 140)">
+    <!-- Left sword -->
+    <line x1="-80" y1="40" x2="-30" y2="-30" stroke="#DC143C" stroke-width="6" stroke-linecap="round"/>
+    <polygon points="-25,-35 -20,-25 -30,-20" fill="#DC143C"/>
+
+    <!-- Right sword -->
+    <line x1="80" y1="40" x2="30" y2="-30" stroke="#DC143C" stroke-width="6" stroke-linecap="round"/>
+    <polygon points="25,-35 20,-25 30,-20" fill="#DC143C"/>
+  </g>
+
+  <!-- Pirate flag -->
+  <g transform="translate(320, 100)">
+    <rect x="0" y="0" width="60" height="40" fill="#2C3E50"/>
+    <circle cx="15" cy="10" r="5" fill="#FF6B35"/>
+    <circle cx="45" cy="10" r="5" fill="#FF6B35"/>
+    <path d="M 15 25 L 45 25" stroke="#FF6B35" stroke-width="3"/>
+  </g>
+</svg>

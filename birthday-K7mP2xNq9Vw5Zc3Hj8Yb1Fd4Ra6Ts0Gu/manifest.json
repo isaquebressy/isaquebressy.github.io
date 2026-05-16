@@ -1,0 +1,48 @@
+{
+  "name": "Festa Pirata - Convite Especial",
+  "short_name": "Festa Pirata",
+  "description": "Celebre a festa pirata! Um convite temático One Piece para uma grande aventura dos Nakama.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#FF6B35",
+  "background_color": "#FFFFFF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "img/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "img/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "img/pwa/screenshot-540x720.png",
+      "sizes": "540x720",
+      "form_factor": "narrow",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["lifestyle", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "Confirmar Presença",
+      "short_name": "Confirmar",
+      "description": "Confirme sua presença na festa",
+      "url": "./?action=confirm",
+      "icons": [
+        {
+          "src": "img/pwa/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
